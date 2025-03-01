@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: "TechUniInviteSystem"
+  flyway:
+    enabled: true
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}
+    baseline-on-migrate: true
+
+mybatis:
+  mapper-locations: classpath:db/mapper/**/*.xml
+
+techuni:
+  swagger:
+    show: false

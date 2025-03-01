@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="context1" targetRuntime="MyBatis3">
+
+        <!--  MapperにMapperアノテーションを付与   -->
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
+        <!--  equalsおよびhashCodeを自動生成      -->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <!-- マッパxmlファイルを生成時に上書きするためのプラグイン -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <!-- コメント生成の抑制 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+            <property name="addRemarkComments" value="false" />
+        </commentGenerator>
+
+        <!--     JDBCの設定 -->
+        <jdbcConnection
+                driverClass="com.mysql.cj.jdbc.Driver"
+                connectionURL="jdbc:mysql://●●●IP●●●:●●●PORT●●●/●●●DB_NAME●●●"
+                userId="●●●USER_NAME●●●"
+                password="●●●PASSWORD●●●"
+        />
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--  Entityの生成場所 -->
+        <javaModelGenerator
+                targetPackage="org.techuni.TechUniInviteSystem.db.entity.base"
+                targetProject="src/main/java/"
+        />
+        <!--  Mapper(xml)の生成場所 -->
+        <sqlMapGenerator
+                targetPackage="db.mapper.base"
+                targetProject="src/main/resources/"
+        />
+
+        <!--  Mapper(java)の生成場所 -->
+        <javaClientGenerator
+                targetPackage="org.techuni.TechUniInviteSystem.db.mapper.base"
+                targetProject="src/main/java/"
+                type="XMLMAPPER"
+        />
+
+        <!--  生成対象のテーブル -->
+        <table tableName="user" />
+        <table tableName="user_authority" />
+    </context>
+</generatorConfiguration>
