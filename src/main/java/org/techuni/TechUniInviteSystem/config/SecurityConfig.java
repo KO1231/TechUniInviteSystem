@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,8 +38,6 @@ public class SecurityConfig {
         http
                 // CORSの設定を適用
                 // .cors(customizer -> customizer.configurationSource(corsConfigurationSource())) //
-                // CSRFの保護を無効にする
-                .csrf(CsrfConfigurer::disable) //
 
                 .authorizeHttpRequests(authorizeRequests -> {
 
