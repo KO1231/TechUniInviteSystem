@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "10:00"
+      timezone: "Asia/Tokyo"
+    groups:
+      security-updates:
+        applies-to: security-updates
+      spring-updates:
+        patterns:
+          - "org.springframework.*"
+      version-updates:
+        applies-to: version-updates
