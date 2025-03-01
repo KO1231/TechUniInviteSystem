@@ -38,9 +38,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // CORSの設定を適用
-                // .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
+                // .cors(customizer -> customizer.configurationSource(corsConfigurationSource())) //
                 // CSRFの保護を無効にする
-                .csrf(CsrfConfigurer::disable).authorizeHttpRequests(authorizeRequests -> {
+                .csrf(CsrfConfigurer::disable) //
+
+                .authorizeHttpRequests(authorizeRequests -> {
 
                     /* 無条件 permitAll (全許可) */
                     authorizeRequests
