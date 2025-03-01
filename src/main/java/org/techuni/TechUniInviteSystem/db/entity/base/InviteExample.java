@@ -1,7 +1,7 @@
 package org.techuni.TechUniInviteSystem.db.entity.base;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class InviteExample {
@@ -525,52 +525,52 @@ public class InviteExample {
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtEqualTo(Date value) {
+        public Criteria andExpiresAtEqualTo(LocalDateTime value) {
             addCriterion("expires_at =", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtNotEqualTo(Date value) {
+        public Criteria andExpiresAtNotEqualTo(LocalDateTime value) {
             addCriterion("expires_at <>", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtGreaterThan(Date value) {
+        public Criteria andExpiresAtGreaterThan(LocalDateTime value) {
             addCriterion("expires_at >", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtGreaterThanOrEqualTo(Date value) {
+        public Criteria andExpiresAtGreaterThanOrEqualTo(LocalDateTime value) {
             addCriterion("expires_at >=", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtLessThan(Date value) {
+        public Criteria andExpiresAtLessThan(LocalDateTime value) {
             addCriterion("expires_at <", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtLessThanOrEqualTo(Date value) {
+        public Criteria andExpiresAtLessThanOrEqualTo(LocalDateTime value) {
             addCriterion("expires_at <=", value, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtIn(List<Date> values) {
+        public Criteria andExpiresAtIn(List<LocalDateTime> values) {
             addCriterion("expires_at in", values, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtNotIn(List<Date> values) {
+        public Criteria andExpiresAtNotIn(List<LocalDateTime> values) {
             addCriterion("expires_at not in", values, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtBetween(Date value1, Date value2) {
+        public Criteria andExpiresAtBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("expires_at between", value1, value2, "expiresAt");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresAtNotBetween(Date value1, Date value2) {
+        public Criteria andExpiresAtNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("expires_at not between", value1, value2, "expiresAt");
             return (Criteria) this;
         }

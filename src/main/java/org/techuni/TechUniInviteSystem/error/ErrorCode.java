@@ -17,6 +17,15 @@ public enum ErrorCode {
     LOGIN_REQUEST_VALIDATION_ERROR(ErrorSource.LOGIN, 4, HttpStatus.UNAUTHORIZED), //
 
     /**
+     * INVITATION
+     **/
+    INVITATION_NOT_FOUND(ErrorSource.INVITATION, 1, HttpStatus.NOT_FOUND), //
+    // 総当たりでnotfoundになるようにNOT_FOUNDで返す
+    INVITATION_ALREADY_USED(ErrorSource.INVITATION, 2, HttpStatus.NOT_FOUND, "Request Already Used Invitation Code. (Code: %s)"), //
+    INVITATION_INVALID(ErrorSource.INVITATION, 3, HttpStatus.NOT_FOUND, "Request Invalid Invitation Code. (Code: %s)"), //
+    INVITATION_CODE_VALIDATION_ERROR(ErrorSource.INVITATION, 4, HttpStatus.NOT_FOUND), //
+
+    /**
      * VALIDATION
      **/
     VALIDATION_ERROR(ErrorSource.VALIDATION, 1, HttpStatus.BAD_REQUEST), //
@@ -83,9 +92,8 @@ public enum ErrorCode {
     private enum ErrorSource {
         OTHER(0), //
         LOGIN(1), //
-        CONTACT_FORM(2), //
-        VALIDATION(3), //
-        MAIL(4);
+        INVITATION(2), //
+        VALIDATION(3);
 
         private final int id;
     }

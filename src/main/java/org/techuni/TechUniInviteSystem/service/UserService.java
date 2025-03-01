@@ -3,7 +3,7 @@ package org.techuni.TechUniInviteSystem.service;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.techuni.TechUniInviteSystem.db.UserRepository;
+import org.techuni.TechUniInviteSystem.db.repository.UserRepository;
 import org.techuni.TechUniInviteSystem.domain.user.UserDto;
 
 @Service
