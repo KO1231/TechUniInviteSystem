@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,12 +40,18 @@ public class SecurityConfig {
                 // CORSの設定を適用
                 // .cors(customizer -> customizer.configurationSource(corsConfigurationSource())) //
 
+                .headers(header -> header //
+                        .frameOptions(FrameOptionsConfig::deny) //
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self';"))) //
+
                 .authorizeHttpRequests(authorizeRequests -> {
 
                     /* 無条件 permitAll (全許可) */
                     authorizeRequests
                             // エラー関係のページは全許可
                             .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                            // public dirは全許可
+                            .requestMatchers("public/**").permitAll()
                             // ログインページは全許可
                             .requestMatchers("/login").permitAll();
 
@@ -60,8 +67,8 @@ public class SecurityConfig {
                     // その他のリクエストは全拒否
                     authorizeRequests.anyRequest().denyAll();
 
-                }).sessionManagement(sessionManagement -> //
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
+                }).sessionManagement(sessionManagement -> sessionManagement //
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
                 .userDetailsService(userDetailsService) //
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
