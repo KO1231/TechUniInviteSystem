@@ -14,3 +14,6 @@ mybatis:
 techuni:
   swagger:
     show: false
+
+jwt:
+  issuer: "Tech.Uni Invite System"

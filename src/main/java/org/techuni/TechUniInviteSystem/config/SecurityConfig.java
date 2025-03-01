@@ -12,13 +12,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
+import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
 
+    private final MyUserDetailsService userDetailsService;
+    private final PasswordEncoder encoder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final TechUniSystemConfig config;
 
     private final static String[] SWAGGER_PATHS = { //
@@ -38,9 +45,12 @@ public class SecurityConfig {
                     /* 無条件 permitAll (全許可) */
                     authorizeRequests
                             // エラー関係のページは全許可
-                            .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
+                            .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                            // ログインページは全許可
+                            .requestMatchers("/login").permitAll();
 
-                    /* 個別ページ (基本check関数で処理) */
+                    // 個別ページの権限設定 (基本check関数で処理)
+
 
                     /* Config依存ページ */
                     // Swaggerの表示設定 (configでshowSwaggerがtrueの場合(原則devかlocal)のみ表示)
@@ -52,13 +62,17 @@ public class SecurityConfig {
                     authorizeRequests.anyRequest().denyAll();
 
                 }).sessionManagement(sessionManagement -> //
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
+                .userDetailsService(userDetailsService) //
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Autowired
     public void configureAuth(AuthenticationManagerBuilder auth) throws Exception {
-        auth.eraseCredentials(true);
+        auth.eraseCredentials(true) //
+                .userDetailsService(userDetailsService) //
+                .passwordEncoder(encoder);
     }
 
     @Bean

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.techuni.TechUniSystem.db.UserMapper">
+
+    <!-- Userエンティティのマッピング定義 -->
+    <resultMap id="UserResultMap" type="org.techuni.TechUniSystem.db.entity.User">
+        <id property="id" column="id"/>
+        <result property="uuid" column="uuid"/>
+        <result property="isEnable" column="isEnable"/>
+        <result property="name" column="name"/>
+        <result property="passHash" column="passHash"/>
+
+        <!-- authoritiesリストのマッピング -->
+        <collection property="authorities" ofType="org.techuni.TechUniSystem.security.UserAuthority" javaType="java.util.HashSet">
+            <result column="authority" javaType="org.techuni.TechUniSystem.security.UserAuthority"/>
+        </collection>
+    </resultMap>
+
+    <!-- getUserByNameセレクトクエリ -->
+    <select id="getUserByName" parameterType="String" resultMap="UserResultMap">
+        SELECT
+            u.id,
+            u.uuid,
+            u.isEnable,
+            u.name,
+            u.passHash,
+            ua.authority
+        FROM
+            user u
+                LEFT JOIN
+            user_authority ua ON u.id = ua.id
+        WHERE
+            u.name = #{name}
+    </select>
+
+</mapper>
