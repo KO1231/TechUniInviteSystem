@@ -51,7 +51,7 @@ public class SecurityConfig {
                             // エラー関係のページは全許可
                             .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                             // public dirは全許可
-                            .requestMatchers("public/**").permitAll()
+                            .requestMatchers("/public/**").permitAll()
                             // ログインページは全許可
                             .requestMatchers("/login").permitAll();
 
