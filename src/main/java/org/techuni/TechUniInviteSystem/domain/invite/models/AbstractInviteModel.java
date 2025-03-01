@@ -3,10 +3,12 @@ package org.techuni.TechUniInviteSystem.domain.invite.models;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 
+@Getter
 @SuperBuilder
 public abstract class AbstractInviteModel {
 

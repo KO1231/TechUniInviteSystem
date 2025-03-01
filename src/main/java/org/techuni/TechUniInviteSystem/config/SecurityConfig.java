@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.techuni.TechUniInviteSystem.controller.InviteController;
 import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
 
@@ -56,6 +57,7 @@ public class SecurityConfig {
                             .requestMatchers("/login").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
+                    authorizeRequests.requestMatchers("/invite/**").access(InviteController::check);
 
 
                     /* Config依存ページ */
