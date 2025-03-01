@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.techuni.TechUniSystem.db.UserMapper">
+<mapper namespace="org.techuni.TechUniInviteSystem.db.mapper.UserMapper">
 
     <!-- Userエンティティのマッピング定義 -->
-    <resultMap id="UserResultMap" type="org.techuni.TechUniSystem.db.entity.User">
+    <resultMap id="UserResultMap" type="org.techuni.TechUniInviteSystem.db.entity.User">
         <id property="id" column="id"/>
         <result property="uuid" column="uuid"/>
         <result property="isEnable" column="isEnable"/>
@@ -13,8 +13,8 @@
         <result property="passHash" column="passHash"/>
 
         <!-- authoritiesリストのマッピング -->
-        <collection property="authorities" ofType="org.techuni.TechUniSystem.security.UserAuthority" javaType="java.util.HashSet">
-            <result column="authority" javaType="org.techuni.TechUniSystem.security.UserAuthority"/>
+        <collection property="authorities" ofType="org.techuni.TechUniInviteSystem.security.UserAuthority" javaType="java.util.HashSet">
+            <result column="authority" javaType="org.techuni.TechUniInviteSystem.security.UserAuthority"/>
         </collection>
     </resultMap>
 
