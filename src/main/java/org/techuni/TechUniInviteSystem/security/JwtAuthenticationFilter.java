@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             finish(request, response, filterChain);
         } catch (AccountStatusException e) {
-            log.warn(ErrorCode.LOGIN_USER_DENIED.getMessage(username));
+            log.warn(ErrorCode.LOGIN_USER_DENIED.getInternalMessage(username));
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
         } catch (AuthenticationException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());

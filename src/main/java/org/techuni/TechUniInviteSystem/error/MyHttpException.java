@@ -6,7 +6,15 @@ public class MyHttpException extends AbstractHttpException {
         super(statusCode);
     }
 
-    public MyHttpException(ErrorCode statusCode, String... args) {
-        super(statusCode, args);
+    public MyHttpException(ErrorCode statusCode, String[] internalArgs, String[] userOutputArgs) {
+        super(statusCode, internalArgs, userOutputArgs);
+    }
+
+    protected MyHttpException(ErrorCode statusCode, String internalMessage, String[] userOutputArgs) {
+        super(statusCode, internalMessage, userOutputArgs);
+    }
+
+    public MyHttpException userOutputArgs(String... userOutputArgs) {
+        return new MyHttpException(this.errorCode, this.internalMessage, userOutputArgs);
     }
 }

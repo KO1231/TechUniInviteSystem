@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,12 +19,16 @@ public class ErrorResponse {
     String error;
     String message;
 
-    public ErrorResponse(HttpStatus status) {
+    public ErrorResponse(HttpStatus status, String message) {
         this.httpStatus = status;
         this.timestamp = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
         this.status = status.value();
         this.error = status.name();
-        this.message = status.getReasonPhrase();
+        this.message = Optional.ofNullable(message).orElse(status.getReasonPhrase());
+    }
+
+    public ErrorResponse(HttpStatus status) {
+        this(status, null);
     }
 
     public ModelAndView createView() {

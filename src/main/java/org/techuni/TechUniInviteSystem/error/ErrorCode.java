@@ -1,14 +1,11 @@
 package org.techuni.TechUniInviteSystem.error;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
 public enum ErrorCode {
 
     /**
@@ -34,33 +31,50 @@ public enum ErrorCode {
     /*
      * エラーメッセージ(内部のエラーログ等向け) ユーザー側にはMyErrorControllerでHttpStatusのreasonPhraseを返すので表示されない。
      */
-    private final String message;
+    private final String internalMessage;
 
-    public int getId() {
-        return source.getId() * SOURCE_MARGIN + id;
+    @Getter
+    private final String userOutputMessage;
+
+    ErrorCode(ErrorSource source, int id, HttpStatus status, String internalMessage, String userOutputMessage) {
+        this.source = source;
+        this.id = id;
+        this.status = status;
+        this.internalMessage = internalMessage;
+        this.userOutputMessage = userOutputMessage;
     }
 
-    public String getMessage(String... args) {
-        if (isEmpty(args)) {
-            return getMessage();
-        }
-        return getMessage().formatted((Object[]) args);
+    ErrorCode(ErrorSource source, int id, HttpStatus status, String internalMessage) {
+        this.source = source;
+        this.id = id;
+        this.status = status;
+        this.internalMessage = internalMessage;
+        this.userOutputMessage = null;
     }
 
     ErrorCode(ErrorSource source, int id, HttpStatus status) {
-        this(source, id, status, null);
+        this(source, id, status, null, null);
+    }
+
+    public int getId() {
+        return source.getId() * SOURCE_MARGIN + id;
     }
 
     public MyHttpException exception() {
         return new MyHttpException(this);
     }
 
-    public MyHttpException exception(String... args) {
-        return new MyHttpException(this, args);
+    public MyHttpException exception(String... internalArgs) {
+        return new MyHttpException(this, internalArgs, null);
     }
 
-    public String getMessage() {
-        final var output = Optional.ofNullable(message).orElse(status.getReasonPhrase());
+    public String getInternalMessage() {
+        final var output = Optional.ofNullable(internalMessage).orElse(status.getReasonPhrase());
+        return "\"%s\" - ErrorCode.%s".formatted(output, this.name());
+    }
+
+    public String getInternalMessage(String... args) {
+        final var output = Optional.ofNullable(internalMessage).orElse(status.getReasonPhrase()).formatted((Object[]) args);
         return "\"%s\" - ErrorCode.%s".formatted(output, this.name());
     }
 
