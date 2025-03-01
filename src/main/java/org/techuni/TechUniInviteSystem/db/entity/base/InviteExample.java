@@ -255,73 +255,73 @@ public class InviteExample {
             return (Criteria) this;
         }
 
-        public Criteria andUuidIsNull() {
-            addCriterion("uuid is null");
+        public Criteria andCodeIsNull() {
+            addCriterion("code is null");
             return (Criteria) this;
         }
 
-        public Criteria andUuidIsNotNull() {
-            addCriterion("uuid is not null");
+        public Criteria andCodeIsNotNull() {
+            addCriterion("code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUuidEqualTo(String value) {
-            addCriterion("uuid =", value, "uuid");
+        public Criteria andCodeEqualTo(String value) {
+            addCriterion("code =", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotEqualTo(String value) {
-            addCriterion("uuid <>", value, "uuid");
+        public Criteria andCodeNotEqualTo(String value) {
+            addCriterion("code <>", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidGreaterThan(String value) {
-            addCriterion("uuid >", value, "uuid");
+        public Criteria andCodeGreaterThan(String value) {
+            addCriterion("code >", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidGreaterThanOrEqualTo(String value) {
-            addCriterion("uuid >=", value, "uuid");
+        public Criteria andCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("code >=", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLessThan(String value) {
-            addCriterion("uuid <", value, "uuid");
+        public Criteria andCodeLessThan(String value) {
+            addCriterion("code <", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLessThanOrEqualTo(String value) {
-            addCriterion("uuid <=", value, "uuid");
+        public Criteria andCodeLessThanOrEqualTo(String value) {
+            addCriterion("code <=", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLike(String value) {
-            addCriterion("uuid like", value, "uuid");
+        public Criteria andCodeLike(String value) {
+            addCriterion("code like", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotLike(String value) {
-            addCriterion("uuid not like", value, "uuid");
+        public Criteria andCodeNotLike(String value) {
+            addCriterion("code not like", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidIn(List<String> values) {
-            addCriterion("uuid in", values, "uuid");
+        public Criteria andCodeIn(List<String> values) {
+            addCriterion("code in", values, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotIn(List<String> values) {
-            addCriterion("uuid not in", values, "uuid");
+        public Criteria andCodeNotIn(List<String> values) {
+            addCriterion("code not in", values, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidBetween(String value1, String value2) {
-            addCriterion("uuid between", value1, value2, "uuid");
+        public Criteria andCodeBetween(String value1, String value2) {
+            addCriterion("code between", value1, value2, "code");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotBetween(String value1, String value2) {
-            addCriterion("uuid not between", value1, value2, "uuid");
+        public Criteria andCodeNotBetween(String value1, String value2) {
+            addCriterion("code not between", value1, value2, "code");
             return (Criteria) this;
         }
 

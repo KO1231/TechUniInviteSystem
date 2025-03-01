@@ -15,7 +15,7 @@ CREATE TABLE target_app(
 
 CREATE TABLE invite (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(36) NOT NULL UNIQUE,
+    code VARCHAR(36) NOT NULL UNIQUE,
     search_id VARCHAR(255) UNIQUE,
     is_disabled BOOLEAN NOT NULL DEFAULT FALSE,
     target_app_id INT NOT NULL,
