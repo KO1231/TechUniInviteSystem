@@ -1,0 +1,38 @@
+body {
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+.error-header {
+    color: white;
+    background-color: #525D76;
+
+    font-size: 32px;
+    padding-left: 5px;
+}
+
+.error-footer {
+    color: white;
+    background-color: #525D76;
+
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+.column-title {
+    color: white;
+    background-color: #525D76;
+
+    font-size: 14px;
+    padding-inline: 10px;
+}
+
+.column-body {
+    font-size: 14px;
+    padding-inline: 5px;
+}
+
+.line {
+    height: 1px;
+    background-color: #525D76;
+    border: none;
+}
