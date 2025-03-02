@@ -25,6 +25,13 @@ public enum ErrorCode {
     INVITATION_INVALID(ErrorSource.INVITATION, 3, HttpStatus.NOT_FOUND, "Request Invalid Invitation Code. (Code: %s)"), //
     INVITATION_CODE_VALIDATION_ERROR(ErrorSource.INVITATION, 4, HttpStatus.NOT_FOUND), //
 
+    /* DISCORD INVITATION */
+    DISCORD_INVITATION_ALREADY_JOINED(ErrorSource.INVITATION, 101, HttpStatus.CONFLICT,
+            "The Discord Invitation target already joined to the guild. (DbId: %s, InvitationCode: %s, Guild: %s, User: %s)",
+            "Your account have already joined to the discord server. If you think this is a mistake, please contact to the inviter."), //
+    DISCORD_LOGIN_FAILED(ErrorSource.INVITATION, 102, HttpStatus.INTERNAL_SERVER_ERROR, "Discord login failed.",
+            "Login to Your account is failed."), //
+
     /**
      * VALIDATION
      **/
