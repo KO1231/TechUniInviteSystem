@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.UUID;
+import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 
 public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
@@ -33,6 +34,25 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
         }
 
         return model;
+    }
+
+    public <R extends AbstractInviteResponse> R intoResponse(final Class<R> responseClazz) {
+        final Method ofMethod;
+        try {
+            ofMethod = responseClazz.getMethod("of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class, ZonedDateTime.class,
+                    Map.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("Cannot find of method in response class", e);
+        }
+
+        final AbstractInviteResponse response;
+        try {
+            response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        return responseClazz.cast(response);
     }
 
 }

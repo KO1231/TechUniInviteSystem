@@ -9,25 +9,26 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
-import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.security.UserAuthority;
+import org.techuni.TechUniInviteSystem.service.InviteService;
 import org.techuni.TechUniInviteSystem.util.AuthorityUtil;
 
-@RestController
-@RequestMapping("/invite")
+@Controller
+@RequestMapping("/")
 @AllArgsConstructor
 public class InviteController {
 
-    private final InviteRepository inviteRepository;
+    private final InviteService inviteService;
 
-    @GetMapping("/{inviteCode}")
-    public AbstractInviteModel acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) {
+    //TODO エラーをruntimeにしている
+    //TODO responseの型を検討する
+    @GetMapping("/accept/{inviteCode}")
+    public String acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) { // TODO modelandviewにする
         if (StringUtils.isBlank(inviteCode)) {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
         }
@@ -37,7 +38,12 @@ public class InviteController {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
         }
 
-        return inviteRepository.getInviteByCode(inviteCode).intoModel();
+        final var inviteDto = inviteService.getInviteByCode(inviteCode);
+        if (inviteDto.isEmpty()) {
+            throw ErrorCode.INVITATION_NOT_FOUND.exception();
+        }
+
+        return inviteService.acceptInvite(inviteDto.get());
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {
