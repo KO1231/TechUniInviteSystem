@@ -19,15 +19,15 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 import org.techuni.TechUniInviteSystem.util.AuthorityUtil;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/accept")
 @AllArgsConstructor
-public class InviteController {
+public class InviteAcceptController {
 
     private final InviteService inviteService;
 
     //TODO エラーをruntimeにしている
     //TODO responseの型を検討する
-    @GetMapping("/accept/{inviteCode}")
+    @GetMapping("/{inviteCode}")
     public String acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) { // TODO modelandviewにする
         if (StringUtils.isBlank(inviteCode)) {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
