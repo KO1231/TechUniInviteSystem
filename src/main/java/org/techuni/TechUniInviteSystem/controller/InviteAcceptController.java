@@ -1,10 +1,10 @@
 package org.techuni.TechUniInviteSystem.controller;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.Authentication;
@@ -28,10 +28,8 @@ public class InviteAcceptController {
 
     //TODO エラーをruntimeにしている
     @GetMapping("/{inviteCode}")
-    public IInviteAcceptResponse acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) { // TODO modelandviewにする
-        if (StringUtils.isBlank(inviteCode)) {
-            throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
-        }
+    public IInviteAcceptResponse acceptInvite( //
+            @Valid @NotBlank @PathVariable("inviteCode") String inviteCode) {
         try {
             UUID.fromString(inviteCode);
         } catch (IllegalArgumentException e) {
