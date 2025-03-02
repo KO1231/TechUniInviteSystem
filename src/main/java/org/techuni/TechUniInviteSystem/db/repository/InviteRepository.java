@@ -55,7 +55,7 @@ public class InviteRepository {
         if (targetApplication == TargetApplication.DISCORD) {
             final var example = new InviteDiscordExample();
             example.or() //
-                    .andIdEqualTo(dbId);
+                    .andInviteIdEqualTo(dbId);
 
             final var discordInvite = inviteDiscordMapper.selectByExample(example) //
                     .stream() //
