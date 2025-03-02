@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.service.InviteService;
+import org.techuni.TechUniInviteSystem.service.invite.DiscordAPIService;
 
 @Controller
 @RequestMapping("/discord")
@@ -21,6 +22,7 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 public class DiscordController {
 
     private final InviteService inviteService;
+    private final DiscordAPIService discordAPIService;
 
     @GetMapping("/authenticated")
     public String handleAuthenticatedResponse( //
@@ -31,7 +33,19 @@ public class DiscordController {
             throw ErrorCode.INVITATION_NOT_FOUND.exception();
         }
 
+        final var discordAPI = discordAPIService.createAPI(code);
         // TODO codeとinviteDtoから処理を実行
+
+        /**
+         *   // 1. From the HTTP API fetch a list of all of the user's guilds
+         *   const guilds = await fetch(`https://discord.com/api/v10/users/@me/guilds`, {
+         *     headers: {
+         *       // NOTE: we're using the access_token provided by the "authenticate" command
+         *       Authorization: `Bearer ${auth.access_token}`,
+         *       'Content-Type': 'application/json',
+         *     },
+         *   }).then((response) => response.json());
+         */
 
         return "redirect:/";
     }
