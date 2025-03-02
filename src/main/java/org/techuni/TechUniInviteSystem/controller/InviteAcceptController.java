@@ -56,7 +56,7 @@ public class InviteAcceptController {
             );
         }
 
-        // その他のリクエストは認証(ログイン)されていたらOK(特定の権限は不要)
-        return AuthorityUtil.isAuthenticated(authentication);
+        // その他のリクエストはdenyAll
+        return new AuthorizationDecision(false);
     }
 }
