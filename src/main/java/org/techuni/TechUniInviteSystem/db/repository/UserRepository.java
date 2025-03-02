@@ -1,4 +1,4 @@
-package org.techuni.TechUniInviteSystem.db;
+package org.techuni.TechUniInviteSystem.db.repository;
 
 import java.util.Optional;
 import lombok.AllArgsConstructor;

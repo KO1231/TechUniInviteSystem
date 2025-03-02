@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.techuni.TechUniInviteSystem.controller.InviteAcceptController;
 import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
 
@@ -51,11 +52,12 @@ public class SecurityConfig {
                             // エラー関係のページは全許可
                             .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                             // public dirは全許可
-                            .requestMatchers("public/**").permitAll()
+                            .requestMatchers("/public/**").permitAll()
                             // ログインページは全許可
                             .requestMatchers("/login").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
+                    authorizeRequests.requestMatchers("/accept/**").access(InviteAcceptController::check);
 
 
                     /* Config依存ページ */

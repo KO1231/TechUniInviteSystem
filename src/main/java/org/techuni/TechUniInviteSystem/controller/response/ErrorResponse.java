@@ -19,16 +19,16 @@ public class ErrorResponse {
     String error;
     String message;
 
-    public ErrorResponse(HttpStatus status, String message) {
+    public ErrorResponse(HttpStatus status, String message, ZoneId zoneId) {
         this.httpStatus = status;
-        this.timestamp = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+        this.timestamp = ZonedDateTime.now(zoneId);
         this.status = status.value();
         this.error = status.name();
         this.message = Optional.ofNullable(message).orElse(status.getReasonPhrase());
     }
 
-    public ErrorResponse(HttpStatus status) {
-        this(status, null);
+    public ErrorResponse(HttpStatus status, ZoneId zoneId) {
+        this(status, null, zoneId);
     }
 
     public ModelAndView createView() {
