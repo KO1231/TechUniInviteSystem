@@ -2,9 +2,12 @@ package org.techuni.TechUniInviteSystem.db.repository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAmount;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordState;
+import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordStateMapper;
 
 @Repository
@@ -13,6 +16,7 @@ public class DiscordInviteRepository {
 
     private final ZoneId ZONE;
     private final InviteDiscordStateMapper inviteDiscordStateMapper;
+    private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
     public void addInviteState(final int inviteId, final String stateString) {
         final var state = new InviteDiscordState();
@@ -22,6 +26,11 @@ public class DiscordInviteRepository {
         state.setCreatedAt(LocalDateTime.now(ZONE));
 
         inviteDiscordStateMapper.insert(state);
+    }
+
+    public void cleanState(TemporalAmount stateExpireTime) {
+        inviteWithDiscordStateMapper.cleanState(LocalDateTime.now(ZONE),
+                Optional.ofNullable(stateExpireTime).map(LocalDateTime.now(ZONE)::minus).orElse(null));
     }
 
 }

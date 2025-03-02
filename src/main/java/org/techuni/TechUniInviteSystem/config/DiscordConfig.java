@@ -22,4 +22,7 @@ public class DiscordConfig {
     @Value("${techuni.discord.endpoint.authenticated}")
     private String authenticatedEndpoint;
 
+    @Value("${techuni.discord.state.expirationSeconds}")
+    private int stateExpirationSeconds;
+
 }
