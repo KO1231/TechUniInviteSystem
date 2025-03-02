@@ -1,6 +1,7 @@
 package org.techuni.TechUniInviteSystem.domain.invite.models;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
@@ -19,7 +20,13 @@ public abstract class AbstractInviteModel {
     TargetApplication targetApplication;
     ZonedDateTime expiresAt;
 
-    public abstract InviteDto intoDto();
+    public InviteDto intoDto() {
+        return new InviteDto(dbId, invitationCode.toString(), searchId, isEnable, targetApplication, expiresAt, generateAdditionalData());
+    }
+
+    protected Map<String, Object> generateAdditionalData() {
+        return Collections.emptyMap();
+    }
 
     public static AbstractInviteModel of(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
             ZonedDateTime expiresAt, Map<String, Object> data) {

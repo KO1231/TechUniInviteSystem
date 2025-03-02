@@ -58,7 +58,7 @@ public class DiscordAPIService {
                     guildIdStr, api.userString());
         }
 
-        api.joinGuild(guildId, null); //TODO nicknameを設定できるように
+        api.joinGuild(guildId, invite.getNickname());
 
         return new DiscordJoinSuccessResponse(guildIdStr);
     }

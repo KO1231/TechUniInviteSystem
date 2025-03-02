@@ -67,6 +67,7 @@ public class InviteRepository {
                     .orElseThrow(() -> new IllegalStateException("Additional data not found."));
 
             result.put("guildID", discordInvite.getGuildId());
+            result.put("nickname", discordInvite.getNickname());
         }
 
         return result;

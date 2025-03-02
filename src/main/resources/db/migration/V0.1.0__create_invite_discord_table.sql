@@ -11,6 +11,7 @@ INSERT INTO target_app (name) VALUES ('discord');
 CREATE TABLE invite_discord (
     invite_id INT PRIMARY KEY,
     guild_id BIGINT UNSIGNED NOT NULL,
+    nickname VARCHAR(32) DEFAULT NULL,
 
     FOREIGN KEY (invite_id) REFERENCES invite(id)
 );
