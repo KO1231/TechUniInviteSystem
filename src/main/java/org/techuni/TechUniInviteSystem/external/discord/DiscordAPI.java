@@ -60,9 +60,12 @@ public class DiscordAPI {
         }
     }
 
-    public MemberData joinGuild(final long guildId) {
+    public MemberData joinGuild(final long guildId, final String nickname) {
         final var request = GuildMemberAddRequest.builder() //
                 .accessToken(client.getAccessToken().getAccessToken()) //
+                .nick(Optional.ofNullable(nickname).orElse(user.username())) //
+                .mute(false) //
+                .deaf(false) //
                 .build();
 
         try {
