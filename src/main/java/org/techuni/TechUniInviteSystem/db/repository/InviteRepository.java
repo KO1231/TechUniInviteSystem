@@ -20,8 +20,7 @@ import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 @AllArgsConstructor
 public class InviteRepository {
 
-    private final static ZoneId ZONE = ZoneId.of("Asia/Tokyo");
-
+    private final ZoneId ZONE;
     private final InviteMapper inviteMapper;
     private final InviteDiscordMapper inviteDiscordMapper;
 

@@ -2,9 +2,11 @@ package org.techuni.TechUniInviteSystem.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -23,6 +25,7 @@ import org.techuni.TechUniInviteSystem.error.AbstractHttpException;
 @Slf4j
 @Controller
 @Getter
+@RequiredArgsConstructor
 @RequestMapping("${server.error.path:${error.path:/error}}") // エラーページへのマッピング
 public class MyErrorController implements ErrorController {
 
@@ -31,6 +34,8 @@ public class MyErrorController implements ErrorController {
             HttpStatus.UNAUTHORIZED, //
             HttpStatus.BAD_REQUEST //
     );
+
+    private final ZoneId ZONE;
 
     /**
      * エラーページのパス。
@@ -55,7 +60,7 @@ public class MyErrorController implements ErrorController {
                 .orElse(null);
 
         // 出力したい情報をセットする
-        return new ErrorResponse(status, viewableMessage).createView();
+        return new ErrorResponse(status, viewableMessage, ZONE).createView();
     }
 
     /**
@@ -75,7 +80,7 @@ public class MyErrorController implements ErrorController {
                 .orElse(null);
 
         // 出力する情報はHttpStatusから全て設定する。(内部のエラーメッセージ等は出力しない。)
-        return new ResponseEntity<>(new ErrorResponse(status, viewableMessage), status);
+        return new ResponseEntity<>(new ErrorResponse(status, viewableMessage, ZONE), status);
     }
 
     private record ErrorInfo(Optional<AbstractHttpException> exception, String exceptionType, String message, String request_uri, String servlet,
