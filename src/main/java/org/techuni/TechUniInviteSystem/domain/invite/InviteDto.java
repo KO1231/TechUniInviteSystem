@@ -2,10 +2,13 @@ package org.techuni.TechUniInviteSystem.domain.invite;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
+import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 
 public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
@@ -14,6 +17,15 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
     public InviteDto(int dbId, String invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication, ZonedDateTime expiresAt,
             Map<String, Object> data) {
         this(dbId, UUID.fromString(invitationCode), searchId, isEnable, targetApplication, expiresAt, data);
+    }
+
+    public static InviteDto fromDB(final Invite invite, final ZoneId zone, final Map<String, Object> additionalData) {
+        final var expiresAt = Optional.ofNullable(invite.getExpiresAt()).map(t -> t.atZone(zone));
+        final boolean isEnable = !invite.getIsDisabled() && !invite.getIsUsed() && //
+                expiresAt.map(t -> t.isAfter(ZonedDateTime.now(zone))).orElse(true);
+
+        return new InviteDto(invite.getId(), invite.getCode(), invite.getSearchId(), isEnable, TargetApplication.getById(invite.getTargetAppId()),
+                expiresAt.orElse(null), additionalData);
     }
 
     public AbstractInviteModel intoModel() {

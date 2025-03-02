@@ -455,6 +455,66 @@ public class InviteExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsUsedIsNull() {
+            addCriterion("is_used is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedIsNotNull() {
+            addCriterion("is_used is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedEqualTo(Boolean value) {
+            addCriterion("is_used =", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedNotEqualTo(Boolean value) {
+            addCriterion("is_used <>", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedGreaterThan(Boolean value) {
+            addCriterion("is_used >", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_used >=", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedLessThan(Boolean value) {
+            addCriterion("is_used <", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_used <=", value, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedIn(List<Boolean> values) {
+            addCriterion("is_used in", values, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedNotIn(List<Boolean> values) {
+            addCriterion("is_used not in", values, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_used between", value1, value2, "isUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsUsedNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_used not between", value1, value2, "isUsed");
+            return (Criteria) this;
+        }
+
         public Criteria andTargetAppIdIsNull() {
             addCriterion("target_app_id is null");
             return (Criteria) this;

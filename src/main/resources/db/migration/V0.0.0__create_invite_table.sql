@@ -18,6 +18,7 @@ CREATE TABLE invite (
     code VARCHAR(36) NOT NULL UNIQUE,
     search_id VARCHAR(255) UNIQUE,
     is_disabled BOOLEAN NOT NULL DEFAULT FALSE,
+    is_used BOOLEAN NOT NULL DEFAULT FALSE,
     target_app_id INT NOT NULL,
     expires_at DATETIME DEFAULT NULL,
 
