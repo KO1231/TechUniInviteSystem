@@ -13,7 +13,7 @@ public class DiscordConfig {
     @Value("${techuni.discord.client-id}")
     private String clientId;
 
-    @Value("${techuni.discord.client-endpoint}")
-    private String clientEndpoint;
+    @Value("${techuni.discord.endpoint.authenticated}")
+    private String authenticatedEndpoint;
 
 }
