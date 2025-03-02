@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.security.UserAuthority;
 import org.techuni.TechUniInviteSystem.service.InviteService;
@@ -28,7 +28,7 @@ public class InviteAcceptController {
 
     //TODO エラーをruntimeにしている
     @GetMapping("/{inviteCode}")
-    public RedirectView acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) { // TODO modelandviewにする
+    public IInviteAcceptResponse acceptInvite(@PathVariable("inviteCode") @NotNull String inviteCode) { // TODO modelandviewにする
         if (StringUtils.isBlank(inviteCode)) {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
         }

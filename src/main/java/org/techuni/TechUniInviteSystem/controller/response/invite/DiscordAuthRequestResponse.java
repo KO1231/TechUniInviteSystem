@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EqualsAndHashCode(callSuper = false)
 @Value
 @AllArgsConstructor
-public class DiscordAuthRequestResponse extends RedirectView {
+public class DiscordAuthRequestResponse extends RedirectView implements IInviteAcceptResponse {
 
     private final static String ENDPOINT_OAUTH = "https://discord.com/api/oauth2/authorize";
     private final static List<String> SCOPE = List.of("identify", "guilds", "guilds.join");
