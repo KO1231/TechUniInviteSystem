@@ -33,8 +33,9 @@ public class DiscordController {
             throw ErrorCode.INVITATION_NOT_FOUND.exception();
         }
 
-        final var discordAPI = discordAPIService.createAPI(code);
-        // TODO codeとinviteDtoから処理を実行
+        final var api = discordAPIService.createAPI(code);
+
+        discordAPIService.joinGuild(api, inviteDto.get());
 
         /**
          *   // 1. From the HTTP API fetch a list of all of the user's guilds

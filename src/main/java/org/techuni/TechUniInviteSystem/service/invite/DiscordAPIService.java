@@ -3,10 +3,14 @@ package org.techuni.TechUniInviteSystem.service.invite;
 import discord4j.discordjson.json.AuthorizationCodeGrantRequest;
 import discord4j.oauth2.DiscordOAuth2Client;
 import discord4j.rest.RestClient;
+import discord4j.rest.http.client.ClientException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.techuni.TechUniInviteSystem.config.DiscordConfig;
+import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
+import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
+import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.external.discord.DiscordAPI;
 
 @Service
@@ -34,6 +38,24 @@ public class DiscordAPIService {
                 .redirectUri(redirectUri) //
                 .build());
 
-        return new DiscordAPI(oauth2client);
+        try {
+            return new DiscordAPI(restClient, oauth2client);
+        } catch (ClientException e) {
+            throw ErrorCode.DISCORD_LOGIN_FAILED.exception();
+        } catch (Exception e) {
+            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception();
+        }
+    }
+
+    public void joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
+        final var invite = inviteDto.intoModel(DiscordInviteModel.class);
+        final var guildId = invite.getGuildID();
+
+        if (api.isGuildMember(Long.parseLong(guildId))) {
+            throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception(String.valueOf(invite.getDbId()), invite.getInvitationCode().toString(),
+                    guildId, api.userString());
+        }
+
+
     }
 }
