@@ -19,7 +19,7 @@ CREATE TABLE invite_discord_state (
     id INT AUTO_INCREMENT PRIMARY KEY,
     invite_id INT NOT NULL,
     state VARCHAR(255) NOT NULL UNIQUE,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME NOT NULL,
 
     FOREIGN KEY (invite_id) REFERENCES invite_discord(invite_id)
 );
