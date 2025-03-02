@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.techuni.TechUniInviteSystem.config.DiscordConfig;
+import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordJoinSuccessResponse;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
@@ -47,15 +48,18 @@ public class DiscordAPIService {
         }
     }
 
-    public void joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
+    public DiscordJoinSuccessResponse joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
-        final var guildId = invite.getGuildID();
+        final var guildIdStr = invite.getGuildID();
+        final var guildId = Long.parseLong(guildIdStr);
 
-        if (api.isGuildMember(Long.parseLong(guildId))) {
+        if (api.isGuildMember(guildId)) {
             throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception(String.valueOf(invite.getDbId()), invite.getInvitationCode().toString(),
-                    guildId, api.userString());
+                    guildIdStr, api.userString());
         }
 
+        api.joinGuild(guildId);
 
+        return new DiscordJoinSuccessResponse(guildIdStr);
     }
 }
