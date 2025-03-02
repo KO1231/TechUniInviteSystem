@@ -36,6 +36,15 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
         return model;
     }
 
+    public <M extends AbstractInviteModel> M intoModel(Class<M> modelClass) {
+        final var _modelClass = targetApplication.getModelClass();
+        if (!modelClass.equals(_modelClass)) {
+            throw new IllegalArgumentException("Model class is not matched.");
+        }
+
+        return modelClass.cast(intoModel());
+    }
+
     public <R extends AbstractInviteResponse> R intoResponse(final Class<R> responseClazz) {
         final Method ofMethod;
         try {
