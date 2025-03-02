@@ -20,6 +20,10 @@ public class InviteService {
         return Optional.ofNullable(inviteRepository.getInviteByCode(code));
     }
 
+    public Optional<InviteDto> getInviteByState(final String state) {
+        return Optional.ofNullable(inviteRepository.getInviteByState(state));
+    }
+
     public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
         final var targetApplication = inviteDto.targetApplication();
 
