@@ -36,12 +36,16 @@ public class InviteAcceptController {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
         }
 
-        final var inviteDto = inviteService.getInviteByCode(inviteCode);
-        if (inviteDto.isEmpty()) {
+        final var _inviteDto = inviteService.getInviteByCode(inviteCode);
+        if (_inviteDto.isEmpty()) {
             throw ErrorCode.INVITATION_NOT_FOUND.exception();
         }
+        final var inviteDto = _inviteDto.get();
+        if (!inviteDto.isEnable()) {
+            throw ErrorCode.INVITATION_INVALID.exception();
+        }
 
-        return inviteService.acceptInvite(inviteDto.get());
+        return inviteService.acceptInvite(inviteDto);
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {

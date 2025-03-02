@@ -36,6 +36,10 @@ public class DiscordController {
         }
         final var inviteDto = _inviteDto.get();
 
+        if (!inviteDto.isEnable()) {
+            throw ErrorCode.INVITATION_INVALID.exception();
+        }
+
         final var api = discordAPIFactory.createAPI(code);
         final var discordAPIService = new DiscordAPIService(api);
 
