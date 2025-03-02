@@ -57,7 +57,7 @@ public class SecurityConfig {
                             .requestMatchers("/login").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
-                    authorizeRequests.requestMatchers("/accept/**").access(InviteAcceptController::check);
+                    authorizeRequests.requestMatchers("/accept/*").access(InviteAcceptController::check);
 
 
                     /* Config依存ページ */
