@@ -41,12 +41,12 @@ public class DiscordController {
 
         final var _inviteDto = inviteService.getInviteByState(state);
         if (_inviteDto.isEmpty()) {
-            throw ErrorCode.INVITATION_NOT_FOUND.exception();
+            throw ErrorCode.INVITATION_NOT_FOUND.exception(code);
         }
         final var inviteDto = _inviteDto.get();
 
         if (!inviteDto.isEnable()) {
-            throw ErrorCode.INVITATION_INVALID.exception();
+            throw ErrorCode.INVITATION_INVALID.exception(code);
         }
 
         final var api = discordAPIFactory.createAPI(code);

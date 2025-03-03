@@ -76,11 +76,11 @@ public class DiscordAPI {
             final var status = e.getStatus().code();
             if (status == 204) {
                 // https://discord.com/developers/docs/resources/guild#add-guild-member
-                throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception();
+                throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception(); // paramは呼び出し側で
             }
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         } catch (Exception e) {
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         }
     }
 

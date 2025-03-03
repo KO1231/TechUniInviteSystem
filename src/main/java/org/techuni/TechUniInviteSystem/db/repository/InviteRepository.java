@@ -82,4 +82,15 @@ public class InviteRepository {
         inviteMapper.updateByExampleSelective(updateInviteSelective, example);
     }
 
+    public void resetInviteUsedStatus(int inviteId) {
+        final var updateInviteSelective = new Invite();
+        updateInviteSelective.setIsUsed(false);
+
+        final var example = new InviteExample();
+        example.or() //
+                .andIdEqualTo(inviteId);
+
+        inviteMapper.updateByExampleSelective(updateInviteSelective, example);
+    }
+
 }

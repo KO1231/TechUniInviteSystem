@@ -38,11 +38,11 @@ public class InviteAcceptController {
 
         final var _inviteDto = inviteService.getInviteByCode(inviteCode);
         if (_inviteDto.isEmpty()) {
-            throw ErrorCode.INVITATION_NOT_FOUND.exception();
+            throw ErrorCode.INVITATION_NOT_FOUND.exception(inviteCode);
         }
         final var inviteDto = _inviteDto.get();
         if (!inviteDto.isEnable()) {
-            throw ErrorCode.INVITATION_INVALID.exception();
+            throw ErrorCode.INVITATION_INVALID.exception(inviteCode);
         }
 
         return inviteService.acceptInvite(inviteDto);
