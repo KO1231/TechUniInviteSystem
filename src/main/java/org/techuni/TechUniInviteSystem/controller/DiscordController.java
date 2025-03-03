@@ -22,8 +22,9 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 @AllArgsConstructor
 public class DiscordController {
 
-    private final InviteService inviteService;
     private final DiscordAPIFactory discordAPIFactory;
+    private final DiscordAPIService discordAPIService;
+    private final InviteService inviteService;
 
     @GetMapping("/authenticated")
     public IInviteAcceptResponse handleAuthenticatedResponse( //
@@ -49,9 +50,8 @@ public class DiscordController {
         }
 
         final var api = discordAPIFactory.createAPI(code);
-        final var discordAPIService = new DiscordAPIService(api);
 
-        return discordAPIService.joinGuild(inviteDto);
+        return discordAPIService.joinGuild(api, inviteDto);
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {

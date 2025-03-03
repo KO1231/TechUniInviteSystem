@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordExample;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteExample;
 import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
@@ -71,6 +72,17 @@ public class InviteRepository {
         }
 
         return result;
+    }
+
+    public void useInvite(int inviteId) {
+        final var updateInviteSelective = new Invite();
+        updateInviteSelective.setIsUsed(true);
+
+        final var example = new InviteExample();
+        example.or() //
+                .andIdEqualTo(inviteId);
+
+        inviteMapper.updateByExampleSelective(updateInviteSelective, example);
     }
 
 }

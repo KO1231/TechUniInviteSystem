@@ -34,4 +34,8 @@ public class InviteService {
         throw new IllegalArgumentException("Unsupported target application. (%s)".formatted(targetApplication));
     }
 
+    public void useInvite(final InviteDto inviteDto) {
+        inviteRepository.useInvite(inviteDto.intoModel().getDbId());
+    }
+
 }

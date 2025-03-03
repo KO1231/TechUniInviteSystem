@@ -1,20 +1,22 @@
 package org.techuni.TechUniInviteSystem.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordJoinSuccessResponse;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.external.discord.DiscordAPI;
 
-@Value
+@Service
 @AllArgsConstructor
 public class DiscordAPIService {
 
-    DiscordAPI api;
+    private final InviteService inviteService;
 
-    public DiscordJoinSuccessResponse joinGuild(final InviteDto inviteDto) {
+    @Transactional
+    public DiscordJoinSuccessResponse joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         final var guildIdStr = invite.getGuildID();
         final var guildId = Long.parseLong(guildIdStr);
@@ -24,6 +26,7 @@ public class DiscordAPIService {
                     guildIdStr, api.userString());
         }
 
+        inviteService.useInvite(inviteDto);
         api.joinGuild(guildId, invite.getNickname());
 
         return new DiscordJoinSuccessResponse(guildIdStr);
