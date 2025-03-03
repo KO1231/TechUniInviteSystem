@@ -46,6 +46,10 @@ public class DiscordInviteService extends AbstractInviteService {
         return new DiscordAuthRequestResponse(clientId, authenticatedEndpoint, state);
     }
 
+    public void setJoinedUser(final int inviteId, final long userId) {
+        discordInviteRepository.setJoinedUser(inviteId, userId);
+    }
+
     // 5分ごとにstateテーブルをclean
     @Scheduled(fixedRate = 5L, timeUnit = TimeUnit.MINUTES)
     public void cleanState() {

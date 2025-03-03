@@ -383,6 +383,66 @@ public class InviteDiscordExample {
             addCriterion("nickname not between", value1, value2, "nickname");
             return (Criteria) this;
         }
+
+        public Criteria andJoinedUserIdIsNull() {
+            addCriterion("joined_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdIsNotNull() {
+            addCriterion("joined_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdEqualTo(Long value) {
+            addCriterion("joined_user_id =", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotEqualTo(Long value) {
+            addCriterion("joined_user_id <>", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdGreaterThan(Long value) {
+            addCriterion("joined_user_id >", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("joined_user_id >=", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdLessThan(Long value) {
+            addCriterion("joined_user_id <", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("joined_user_id <=", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdIn(List<Long> values) {
+            addCriterion("joined_user_id in", values, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotIn(List<Long> values) {
+            addCriterion("joined_user_id not in", values, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdBetween(Long value1, Long value2) {
+            addCriterion("joined_user_id between", value1, value2, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("joined_user_id not between", value1, value2, "joinedUserId");
+            return (Criteria) this;
+        }
     }
 
     /**
