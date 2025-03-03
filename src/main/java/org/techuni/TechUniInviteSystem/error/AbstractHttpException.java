@@ -10,23 +10,24 @@ public abstract class AbstractHttpException extends ResponseStatusException {
     protected final String internalMessage;
     protected final String userOutputMessage;
 
-    private AbstractHttpException(ErrorCode statusCode, String message, String userOutputMessage) {
-        super(statusCode.getStatus(), message);
+    private AbstractHttpException(ErrorCode statusCode, Throwable cause, String message, String userOutputMessage) {
+        super(statusCode.getStatus(), message, cause);
         this.errorCode = statusCode;
         this.internalMessage = message;
         this.userOutputMessage = userOutputMessage;
     }
 
-    protected AbstractHttpException(ErrorCode statusCode) {
-        this(statusCode, statusCode.getInternalMessage(), statusCode.getUserOutputMessage());
+    protected AbstractHttpException(ErrorCode statusCode, Throwable cause) {
+        this(statusCode, cause, statusCode.getInternalMessage(), statusCode.getUserOutputMessage());
     }
 
-    protected AbstractHttpException(ErrorCode statusCode, String internalMessage, String[] userOutputArgs) {
-        this(statusCode, internalMessage, statusCode.getUserOutputMessage().formatted((Object[]) userOutputArgs));
+    protected AbstractHttpException(ErrorCode statusCode, Throwable cause, String internalMessage, String[] userOutputArgs) {
+        this(statusCode, cause, internalMessage, statusCode.getUserOutputMessage().formatted((Object[]) userOutputArgs));
     }
 
-    protected AbstractHttpException(ErrorCode statusCode, String[] internalArgs, String[] userOutputArgs) {
+    protected AbstractHttpException(ErrorCode statusCode, Throwable cause, String[] internalArgs, String[] userOutputArgs) {
         this(statusCode, //
+                cause, //
                 statusCode.getInternalMessage(internalArgs), //
                 statusCode.getUserOutputMessage().formatted((Object[]) userOutputArgs));
     }

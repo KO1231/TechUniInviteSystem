@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.error.ErrorCode;
 
 @Getter
 @SuperBuilder
@@ -29,6 +30,6 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
 
     public static <ADDITIONAL extends AbstractInviteAdditionalData> AbstractInviteModel<ADDITIONAL> of(int dbId, UUID invitationCode, String searchId,
             boolean isEnable, TargetApplication targetApplication, ZonedDateTime expiresAt, ADDITIONAL data) {
-        throw new UnsupportedOperationException("Not implemented.");
+        throw ErrorCode.UNEXPECTED_ERROR.exception("Not implemented (AbstractInviteModel::of).");
     }
 }

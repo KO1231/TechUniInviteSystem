@@ -9,8 +9,7 @@ import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 @AllArgsConstructor
 @Getter
 public enum TargetApplication {
-    DISCORD(1, DiscordInviteModel.class),
-    ;
+    DISCORD(1, DiscordInviteModel.class),;
 
     private final int id;
     private final Class<? extends AbstractInviteModel<?>> modelClass;

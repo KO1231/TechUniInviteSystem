@@ -38,9 +38,9 @@ public class DiscordAPIFactory {
         try {
             return new DiscordAPI(restClient, oauth2client);
         } catch (ClientException e) {
-            throw ErrorCode.DISCORD_LOGIN_FAILED.exception();
+            throw ErrorCode.DISCORD_LOGIN_FAILED.exception(e);
         } catch (Exception e) {
-            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception(e);
         }
     }
 }

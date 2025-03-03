@@ -36,17 +36,17 @@ public class DiscordController {
             }
             throw ErrorCode.DISCORD_LOGIN_FAILED.exception();
         } else if (StringUtils.isBlank(code) || StringUtils.isBlank(state)) {
-            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_AUTHENTICATED_VALIDATION_ERROR.exception();
         }
 
         final var _inviteDto = inviteService.getInviteByState(state);
         if (_inviteDto.isEmpty()) {
-            throw ErrorCode.INVITATION_NOT_FOUND.exception();
+            throw ErrorCode.INVITATION_NOT_FOUND.exception(code);
         }
         final var inviteDto = _inviteDto.get();
 
         if (!inviteDto.isEnable()) {
-            throw ErrorCode.INVITATION_INVALID.exception();
+            throw ErrorCode.INVITATION_INVALID.exception(code);
         }
 
         final var api = discordAPIFactory.createAPI(code);

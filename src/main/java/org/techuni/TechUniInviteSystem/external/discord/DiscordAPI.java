@@ -32,11 +32,11 @@ public class DiscordAPI {
 
         try {
             this.user = Optional.ofNullable(client.getCurrentUser().block()) //
-                    .orElseThrow(() -> ErrorCode.DISCORD_LOAD_USER_INFO_FAILED.exception());
+                    .orElseThrow(() -> ErrorCode.DISCORD_LOAD_USER_INFO_FAILED.exception("RestClient::getCurrentUser returned null."));
         } catch (ClientException e) {
-            throw ErrorCode.DISCORD_LOAD_USER_INFO_FAILED.exception();
+            throw ErrorCode.DISCORD_LOAD_USER_INFO_FAILED.exception(e);
         } catch (Exception e) {
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         }
 
         this.userId = user.id().asLong();
@@ -54,9 +54,9 @@ public class DiscordAPI {
                     .collect(Collectors.toSet()) //
                     .block();
         } catch (ClientException e) {
-            throw ErrorCode.DISCORD_LOAD_GUILD_LIST_FAILED.exception(userString());
+            throw ErrorCode.DISCORD_LOAD_GUILD_LIST_FAILED.exception(e, userString());
         } catch (Exception e) {
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         }
     }
 
@@ -76,11 +76,11 @@ public class DiscordAPI {
             final var status = e.getStatus().code();
             if (status == 204) {
                 // https://discord.com/developers/docs/resources/guild#add-guild-member
-                throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception();
+                throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception(); // paramは呼び出し側で
             }
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         } catch (Exception e) {
-            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_UNEXPECTED_ERROR.exception(e);
         }
     }
 

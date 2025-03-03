@@ -11,5 +11,5 @@ public class DiscordInviteAdditionalData extends AbstractInviteAdditionalData {
 
     String guildID;
     String nickname;
-    
+
 }

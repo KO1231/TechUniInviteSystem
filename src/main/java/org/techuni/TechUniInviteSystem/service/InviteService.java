@@ -7,6 +7,7 @@ import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptR
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
+import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.service.invite.DiscordInviteService;
 
 @Service
@@ -25,17 +26,21 @@ public class InviteService {
     }
 
     public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
-        final var targetApplication = inviteDto.targetApplication();
+        final var targetApplication = inviteDto.getTargetApplication();
 
         if (targetApplication.equals(TargetApplication.DISCORD)) {
             return discordInviteService.acceptInvite(inviteDto);
         }
 
-        throw new IllegalArgumentException("Unsupported target application. (%s)".formatted(targetApplication));
+        throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
     }
 
     public void useInvite(final InviteDto inviteDto) {
         inviteRepository.useInvite(inviteDto.intoModel().getDbId());
+    }
+
+    public void resetInviteUseStatus(final InviteDto inviteDto) {
+        inviteRepository.resetInviteUsedStatus(inviteDto.intoModel().getDbId());
     }
 
 }
