@@ -9,6 +9,12 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     /**
+     * OTHER
+     */
+    UNEXPECTED_ERROR(ErrorSource.OTHER, 1, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred. Message: %s",
+            "Some error occurred. Please try again later. If you have this error repeatedly, please contact to the inviter."), //
+
+    /**
      * LOGIN
      **/
     LOGIN_FAILED(ErrorSource.LOGIN, 1, HttpStatus.UNAUTHORIZED), //

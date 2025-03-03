@@ -12,6 +12,7 @@ import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInvite
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.error.ErrorCode;
 
 public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
         ZonedDateTime expiresAt, AbstractInviteAdditionalData data) {
@@ -37,7 +38,7 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
             ofMethod = findMethod(modelClass, true, "of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class,
                     ZonedDateTime.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Cannot find of method in model class", e);
+            throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in model class. (Class: %s)".formatted(modelClass.getName()));
         }
 
         try {
@@ -47,14 +48,16 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
 
             return model;
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
-            throw new RuntimeException(e);
+            throw ErrorCode.UNEXPECTED_ERROR.exception(e,
+                    "Some error occurred while creating model instance. (Class: %s)".formatted(modelClass.getName()));
         }
     }
 
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
-            throw new IllegalArgumentException("Model class is not matched.");
+            throw ErrorCode.UNEXPECTED_ERROR.exception(
+                    "Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
         }
 
         return modelClass.cast(intoModel());
@@ -66,14 +69,15 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
             ofMethod = findMethod(responseClazz, true, "of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class,
                     ZonedDateTime.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Cannot find of method in response class", e);
+            throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in response class. (Class: %s)".formatted(responseClazz.getName()));
         }
 
         final AbstractInviteResponse response;
         try {
             response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
+            throw ErrorCode.UNEXPECTED_ERROR.exception(e,
+                    "Some error occurred while creating response instance. (Class: %s)".formatted(responseClazz.getName()));
         }
 
         return responseClazz.cast(response);
