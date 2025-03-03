@@ -20,8 +20,8 @@ public class DiscordAPIFactory {
     private final String redirectUri;
 
     @Autowired
-    public DiscordAPIFactory(final DiscordConfig discordConfig) {
-        this.restClient = RestClient.create(discordConfig.getToken());
+    public DiscordAPIFactory(final DiscordConfig discordConfig, final RestClient restClient) {
+        this.restClient = restClient;
         this.clientId = Long.parseLong(discordConfig.getClientId());
         this.clientSecret = discordConfig.getClientSecret();
         this.redirectUri = discordConfig.getAuthenticatedEndpoint();

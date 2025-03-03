@@ -40,3 +40,5 @@ build/
 !/src/main/resources/application-sample.yml
 
 /src/main/resources/generatorConfig.xml
+
+/src/main/resources/templates/discord/**
