@@ -3,8 +3,6 @@ package org.techuni.TechUniInviteSystem.db.repository;
 import static java.util.Objects.isNull;
 
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
@@ -15,6 +13,8 @@ import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteMapper;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordInviteAdditionalData;
 
 @Repository
 @AllArgsConstructor
@@ -54,9 +54,7 @@ public class InviteRepository {
         return InviteDto.fromDB(invite, ZONE, getAdditionalData(TargetApplication.getById(invite.getTargetAppId()), invite.getId()));
     }
 
-    private Map<String, Object> getAdditionalData(TargetApplication targetApplication, int dbId) {
-        final var result = new HashMap<String, Object>();
-
+    private AbstractInviteAdditionalData getAdditionalData(TargetApplication targetApplication, int dbId) {
         if (targetApplication == TargetApplication.DISCORD) {
             final var example = new InviteDiscordExample();
             example.or() //
@@ -67,11 +65,10 @@ public class InviteRepository {
                     .findFirst() //
                     .orElseThrow(() -> new IllegalStateException("Additional data not found."));
 
-            result.put("guildID", discordInvite.getGuildId());
-            result.put("nickname", discordInvite.getNickname());
+            return new DiscordInviteAdditionalData(String.valueOf(discordInvite.getGuildId()), discordInvite.getNickname());
         }
 
-        return result;
+        return null;
     }
 
     public void useInvite(int inviteId) {

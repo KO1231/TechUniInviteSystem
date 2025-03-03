@@ -1,7 +1,6 @@
 package org.techuni.TechUniInviteSystem.domain.invite.models;
 
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -18,7 +17,7 @@ public class DiscordInviteModel extends AbstractInviteModel<DiscordInviteAdditio
     DiscordInviteAdditionalData additionalData;
 
     public static AbstractInviteModel<DiscordInviteAdditionalData> of(int dbId, UUID invitationCode, String searchId, boolean isEnable,
-            TargetApplication targetApplication, ZonedDateTime expiresAt, Map<String, Object> data) {
+            TargetApplication targetApplication, ZonedDateTime expiresAt, DiscordInviteAdditionalData data) {
         return DiscordInviteModel.builder() //
                 .dbId(dbId) //
                 .invitationCode(invitationCode) //
@@ -26,6 +25,7 @@ public class DiscordInviteModel extends AbstractInviteModel<DiscordInviteAdditio
                 .isEnable(isEnable) //
                 .targetApplication(targetApplication) //
                 .expiresAt(expiresAt) //
-                .additionalData(DiscordInviteAdditionalData.fromMap(data)).build();
+                .additionalData(data) //
+                .build();
     }
 }
