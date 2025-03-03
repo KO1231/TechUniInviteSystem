@@ -29,15 +29,18 @@ public enum ErrorCode {
     DISCORD_INVITATION_ALREADY_JOINED(ErrorSource.INVITATION, 101, HttpStatus.CONFLICT,
             "The Discord Invitation target already joined to the guild. (DbId: %s, InvitationCode: %s, Guild: %s, User: %s)",
             "Your account have already joined to the discord server. If you think this is a mistake, please contact to the inviter."), //
-    DISCORD_LOGIN_FAILED(ErrorSource.INVITATION, 102, HttpStatus.UNAUTHORIZED, "Discord login failed.", "Login to Your account is failed."), //
+    DISCORD_LOGIN_FAILED(ErrorSource.INVITATION, 102, HttpStatus.UNAUTHORIZED, "Discord login failed.",
+            "Login to Your account is failed. If you think this is a mistake, please try again."), //
     DISCORD_LOGIN_UNEXPECTED_ERROR(ErrorSource.INVITATION, 103, HttpStatus.UNAUTHORIZED, "Unexpected error occurred in Discord login sequence.",
-            "Login to Your account is failed."), //
+            "Login to Your account is failed. If you think this is a mistake, please try again."), //
     DISCORD_UNEXPECTED_ERROR(ErrorSource.INVITATION, 104, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred in Discord API.",
             "Unexpected error occurred in Discord API."), //
     DISCORD_LOAD_GUILD_LIST_FAILED(ErrorSource.INVITATION, 105, HttpStatus.UNAUTHORIZED, "Failed to load guild list from Discord API. (User: %s)",
-            "Login to Your account is failed."), //
+            "Login to Your account is failed. If you think this is a mistake, please try again."), //
     DISCORD_LOAD_USER_INFO_FAILED(ErrorSource.INVITATION, 106, HttpStatus.UNAUTHORIZED, "Failed to load user info from Discord API.",
-            "Login to Your account is failed."), //
+            "Login to Your account is failed. If you think this is a mistake, please try again."), //
+    DISCORD_LOGIN_DENIED(ErrorSource.INVITATION, 107, HttpStatus.UNAUTHORIZED, "User denied to login to Discord.",
+            "You denied to login to Discord. If you think this is a mistake, please try again."), //
 
     /**
      * VALIDATION

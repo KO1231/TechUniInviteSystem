@@ -1,9 +1,8 @@
 package org.techuni.TechUniInviteSystem.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.Authentication;
@@ -28,8 +27,17 @@ public class DiscordController {
 
     @GetMapping("/authenticated")
     public IInviteAcceptResponse handleAuthenticatedResponse( //
-            @Valid @NotBlank @RequestParam("code") final String code, //
-            @Valid @NotBlank @RequestParam("state") final String state) {
+            @RequestParam(value = "code", required = false) final String code, @RequestParam(value = "state", required = false) final String state,
+            @RequestParam(value = "error", required = false) final String error) {
+        if (StringUtils.isNotBlank(error)) {
+            if (error.equals("access_denied")) {
+                throw ErrorCode.DISCORD_LOGIN_DENIED.exception();
+            }
+            throw ErrorCode.DISCORD_LOGIN_FAILED.exception();
+        } else if (StringUtils.isBlank(code) || StringUtils.isBlank(state)) {
+            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception();
+        }
+
         final var _inviteDto = inviteService.getInviteByState(state);
         if (_inviteDto.isEmpty()) {
             throw ErrorCode.INVITATION_NOT_FOUND.exception();
