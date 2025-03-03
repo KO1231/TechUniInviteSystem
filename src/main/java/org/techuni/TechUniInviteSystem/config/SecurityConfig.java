@@ -54,7 +54,9 @@ public class SecurityConfig {
                             // public dirは全許可
                             .requestMatchers("/public/**").permitAll()
                             // ログインページは全許可
-                            .requestMatchers("/login").permitAll();
+                            .requestMatchers("/login").permitAll()
+                            // その他publicファイルを指定 (全許可)
+                            .requestMatchers("/robots.txt").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
                     authorizeRequests.requestMatchers("/accept/**").access(InviteAcceptController::check);
