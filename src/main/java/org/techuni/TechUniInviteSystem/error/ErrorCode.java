@@ -90,8 +90,16 @@ public enum ErrorCode {
         return new MyHttpException(this);
     }
 
+    public MyHttpException exception(Throwable cause) {
+        return new MyHttpException(this, cause);
+    }
+
     public MyHttpException exception(String... internalArgs) {
-        return new MyHttpException(this, internalArgs, null);
+        return new MyHttpException(this, null, internalArgs, null);
+    }
+
+    public MyHttpException exception(Throwable cause, String... internalArgs) {
+        return new MyHttpException(this, cause, internalArgs, null);
     }
 
     public String getInternalMessage() {
