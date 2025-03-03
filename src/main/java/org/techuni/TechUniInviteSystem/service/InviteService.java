@@ -39,8 +39,8 @@ public class InviteService {
         inviteRepository.useInvite(inviteDto.intoModel().getDbId());
     }
 
-    public void resetInviteUseStatus(final InviteDto inviteDto) {
-        inviteRepository.resetInviteUsedStatus(inviteDto.intoModel().getDbId());
+    public void revertUseInvite(final InviteDto inviteDto) {
+        inviteRepository.revertUseInvite(inviteDto.intoModel().getDbId());
     }
 
 }

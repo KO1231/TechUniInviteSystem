@@ -38,7 +38,7 @@ public class DiscordAPIService {
         } catch (MyHttpException e) {
             // ALREADY_JOINEDのparamセット & useステータスのリセット処理(ALREADY_JOINEDのときは再使用可能に)
             if (e.getErrorCode().equals(ErrorCode.DISCORD_INVITATION_ALREADY_JOINED)) {
-                inviteService.resetInviteUseStatus(inviteDto);
+                inviteService.revertUseInvite(inviteDto);
                 throw ErrorCode.DISCORD_INVITATION_ALREADY_JOINED.exception(String.valueOf(invite.getDbId()), invite.getInvitationCode().toString(),
                         guildIdStr, api.userString());
             } else {
