@@ -51,6 +51,8 @@ public enum ErrorCode {
             "Login to Your account is failed. If you think this is a mistake, please try again."), //
     DISCORD_LOGIN_DENIED(ErrorSource.INVITATION, 107, HttpStatus.UNAUTHORIZED, "User denied to login to Discord.",
             "You denied to login to Discord. If you think this is a mistake, please try again."), //
+    DISCORD_AUTHENTICATED_VALIDATION_ERROR(ErrorSource.INVITATION, 108, HttpStatus.UNAUTHORIZED, null,
+            "Login to Your account is failed. If you think this is a mistake, please try again."), //
 
     /**
      * VALIDATION

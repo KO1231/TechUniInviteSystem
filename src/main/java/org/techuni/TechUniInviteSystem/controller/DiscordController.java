@@ -36,7 +36,7 @@ public class DiscordController {
             }
             throw ErrorCode.DISCORD_LOGIN_FAILED.exception();
         } else if (StringUtils.isBlank(code) || StringUtils.isBlank(state)) {
-            throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception();
+            throw ErrorCode.DISCORD_AUTHENTICATED_VALIDATION_ERROR.exception();
         }
 
         final var _inviteDto = inviteService.getInviteByState(state);
