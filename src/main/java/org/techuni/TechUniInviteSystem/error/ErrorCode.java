@@ -25,11 +25,15 @@ public enum ErrorCode {
     /**
      * INVITATION
      **/
-    INVITATION_NOT_FOUND(ErrorSource.INVITATION, 1, HttpStatus.NOT_FOUND), //
+    INVITATION_NOT_FOUND(ErrorSource.INVITATION, 1, HttpStatus.NOT_FOUND, null,
+            "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
     // 総当たりでnotfoundになるようにNOT_FOUNDで返す
-    INVITATION_ALREADY_USED(ErrorSource.INVITATION, 2, HttpStatus.NOT_FOUND, "Request Already Used Invitation Code. (Code: %s)"), //
-    INVITATION_INVALID(ErrorSource.INVITATION, 3, HttpStatus.NOT_FOUND, "Request Invalid Invitation Code. (Code: %s)"), //
-    INVITATION_CODE_VALIDATION_ERROR(ErrorSource.INVITATION, 4, HttpStatus.NOT_FOUND), //
+    INVITATION_ALREADY_USED(ErrorSource.INVITATION, 2, HttpStatus.NOT_FOUND, "Request Already Used Invitation Code. (Code: %s)",
+            "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
+    INVITATION_INVALID(ErrorSource.INVITATION, 3, HttpStatus.NOT_FOUND, "Request Invalid Invitation Code. (Code: %s)",
+            "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
+    INVITATION_CODE_VALIDATION_ERROR(ErrorSource.INVITATION, 4, HttpStatus.NOT_FOUND, null,
+            "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
 
     /* DISCORD INVITATION */
     DISCORD_INVITATION_ALREADY_JOINED(ErrorSource.INVITATION, 101, HttpStatus.CONFLICT,
