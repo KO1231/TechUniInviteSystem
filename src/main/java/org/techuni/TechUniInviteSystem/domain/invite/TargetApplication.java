@@ -13,7 +13,7 @@ public enum TargetApplication {
     ;
 
     private final int id;
-    private final Class<? extends AbstractInviteModel> modelClass;
+    private final Class<? extends AbstractInviteModel<?>> modelClass;
 
     public static TargetApplication getById(int id) {
         return Arrays.stream(values()).filter(targetApplication -> targetApplication.id == id).findFirst()
