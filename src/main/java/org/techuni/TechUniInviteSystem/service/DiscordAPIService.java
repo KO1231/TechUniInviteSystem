@@ -83,8 +83,8 @@ public class DiscordAPIService {
         final var message = templateEngine.process(variables);
 
         final var userIdStr = String.valueOf(userId);
-        final var messageRequest = MultipartRequest.ofRequestAndFiles( //
-                (MessageCreateRequest) MessageCreateRequest.builder().content(message) //
+        final MultipartRequest<MessageCreateRequest> messageRequest = MultipartRequest.ofRequestAndFiles( //
+                MessageCreateRequest.builder().content(message) //
                         .allowedMentions(AllowedMentionsData.builder().addUser(userIdStr).build()).build(), //
                 Optional.ofNullable(attachments).orElse(Collections.emptyList()));
 
