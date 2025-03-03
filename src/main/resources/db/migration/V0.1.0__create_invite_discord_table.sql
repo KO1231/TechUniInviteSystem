@@ -1,9 +1,9 @@
 /*
- GRANT SELECT, INSERT, CREATE, REFERENCES, ALTER ON DB.invite_discord TO DBUSER;
- GRANT SELECT, INSERT, CREATE, REFERENCES, ALTER ON DB.invite_discord TO DBUSER;
+ GRANT SELECT, INSERT, CREATE, UPDATE(joined_user_id), REFERENCES, ALTER ON DB.invite_discord TO DBUSER;
+ GRANT SELECT, INSERT, CREATE, DELETE REFERENCES, ALTER ON DB.invite_discord_state TO DBUSER;
 
- GRANT SELECT, INSERT, CREATE, REFERENCES, ALTER ON DB_dev.invite_discord TO DBUSER_dev;
- GRANT SELECT, INSERT, CREATE, REFERENCES, ALTER ON DB_dev.invite_discord_state TO DBUSER_dev;
+ GRANT SELECT, INSERT, CREATE, UPDATE(joined_user_id), REFERENCES, ALTER ON DB_dev.invite_discord TO DBUSER_dev;
+ GRANT SELECT, INSERT, CREATE, DELETE, REFERENCES, ALTER ON DB_dev.invite_discord_state TO DBUSER_dev;
  */
 
 INSERT INTO target_app (name) VALUES ('discord');
@@ -11,6 +11,8 @@ INSERT INTO target_app (name) VALUES ('discord');
 CREATE TABLE invite_discord (
     invite_id INT PRIMARY KEY,
     guild_id BIGINT UNSIGNED NOT NULL,
+    nickname VARCHAR(32) DEFAULT NULL,
+    joined_user_id BIGINT UNSIGNED DEFAULT NULL,
 
     FOREIGN KEY (invite_id) REFERENCES invite(id)
 );

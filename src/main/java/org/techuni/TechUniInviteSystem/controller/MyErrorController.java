@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 import org.techuni.TechUniInviteSystem.controller.response.ErrorResponse;
 import org.techuni.TechUniInviteSystem.error.AbstractHttpException;
@@ -87,7 +88,7 @@ public class MyErrorController implements ErrorController {
             String status_code) {
 
         public ErrorInfo(HttpServletRequest req) {
-            this(generateException(req.getAttribute(RequestDispatcher.ERROR_EXCEPTION)),
+            this(generateException(req.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE)),
                     String.valueOf(req.getAttribute(RequestDispatcher.ERROR_EXCEPTION_TYPE)),
                     String.valueOf(req.getAttribute(RequestDispatcher.ERROR_MESSAGE)),
                     String.valueOf(req.getAttribute(RequestDispatcher.ERROR_REQUEST_URI)),
@@ -112,9 +113,18 @@ public class MyErrorController implements ErrorController {
     }
 
     private static HttpStatus getStatus(ErrorInfo errorInfo) {
+        // MyHttpExceptionでErrorCodeが指定されている場合は優先。
+        if (errorInfo.exception().isPresent()) {
+            final var errorCode = errorInfo.exception().get().getErrorCode();
+            final var status = errorCode.getStatus();
+            if (!status.isError()) {
+                log.warn("ErrorController unexcepted catch non-error status. error: {}, status: {}", errorCode.name(), status.value());
+            }
+            return status;
+        }
+
         // unexceptedなエラーはすべてNOT_FOUNDに(セキュリティ上)
         HttpStatus status;
-
         try {
             status = HttpStatus.valueOf(errorInfo.getIntStatusCode());
         } catch (IllegalArgumentException ignored) { // IllegalArgumentException, NumberFormatException などなど...

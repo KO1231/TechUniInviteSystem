@@ -3,14 +3,14 @@ package org.techuni.TechUniInviteSystem.db.repository;
 import static java.util.Objects.isNull;
 
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordExample;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteExample;
+import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteMapper;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
@@ -23,6 +23,7 @@ public class InviteRepository {
     private final ZoneId ZONE;
     private final InviteMapper inviteMapper;
     private final InviteDiscordMapper inviteDiscordMapper;
+    private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
     public InviteDto getInviteByCode(String code) {
         final var searchExample = new InviteExample();
@@ -39,13 +40,18 @@ public class InviteRepository {
             return null;
         }
 
-        final var expiresAt = Optional.ofNullable(invite.getExpiresAt()).map(t -> t.atZone(ZONE));
-        final boolean isEnable = !invite.getIsDisabled() && expiresAt.map(t -> t.isAfter(ZonedDateTime.now(ZONE))).orElse(true);
+        return InviteDto.fromDB(invite, ZONE, getAdditionalData(TargetApplication.getById(invite.getTargetAppId()), invite.getId()));
+    }
 
-        final var additionalData = getAdditionalData(TargetApplication.getById(invite.getTargetAppId()), invite.getId());
+    public InviteDto getInviteByState(String state) {
 
-        return new InviteDto(invite.getId(), invite.getCode(), invite.getSearchId(), isEnable, TargetApplication.getById(invite.getTargetAppId()),
-                expiresAt.orElse(null), additionalData);
+        final var invite = inviteWithDiscordStateMapper.getInviteByState(state);
+
+        if (isNull(invite)) {
+            return null;
+        }
+
+        return InviteDto.fromDB(invite, ZONE, getAdditionalData(TargetApplication.getById(invite.getTargetAppId()), invite.getId()));
     }
 
     private Map<String, Object> getAdditionalData(TargetApplication targetApplication, int dbId) {
@@ -62,9 +68,21 @@ public class InviteRepository {
                     .orElseThrow(() -> new IllegalStateException("Additional data not found."));
 
             result.put("guildID", discordInvite.getGuildId());
+            result.put("nickname", discordInvite.getNickname());
         }
 
         return result;
+    }
+
+    public void useInvite(int inviteId) {
+        final var updateInviteSelective = new Invite();
+        updateInviteSelective.setIsUsed(true);
+
+        final var example = new InviteExample();
+        example.or() //
+                .andIdEqualTo(inviteId);
+
+        inviteMapper.updateByExampleSelective(updateInviteSelective, example);
     }
 
 }

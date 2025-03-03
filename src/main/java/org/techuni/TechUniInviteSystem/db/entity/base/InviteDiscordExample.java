@@ -313,6 +313,136 @@ public class InviteDiscordExample {
             addCriterion("guild_id not between", value1, value2, "guildId");
             return (Criteria) this;
         }
+
+        public Criteria andNicknameIsNull() {
+            addCriterion("nickname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIsNotNull() {
+            addCriterion("nickname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameEqualTo(String value) {
+            addCriterion("nickname =", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotEqualTo(String value) {
+            addCriterion("nickname <>", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThan(String value) {
+            addCriterion("nickname >", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameGreaterThanOrEqualTo(String value) {
+            addCriterion("nickname >=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThan(String value) {
+            addCriterion("nickname <", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLessThanOrEqualTo(String value) {
+            addCriterion("nickname <=", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameLike(String value) {
+            addCriterion("nickname like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotLike(String value) {
+            addCriterion("nickname not like", value, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameIn(List<String> values) {
+            addCriterion("nickname in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotIn(List<String> values) {
+            addCriterion("nickname not in", values, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameBetween(String value1, String value2) {
+            addCriterion("nickname between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andNicknameNotBetween(String value1, String value2) {
+            addCriterion("nickname not between", value1, value2, "nickname");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdIsNull() {
+            addCriterion("joined_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdIsNotNull() {
+            addCriterion("joined_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdEqualTo(Long value) {
+            addCriterion("joined_user_id =", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotEqualTo(Long value) {
+            addCriterion("joined_user_id <>", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdGreaterThan(Long value) {
+            addCriterion("joined_user_id >", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("joined_user_id >=", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdLessThan(Long value) {
+            addCriterion("joined_user_id <", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("joined_user_id <=", value, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdIn(List<Long> values) {
+            addCriterion("joined_user_id in", values, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotIn(List<Long> values) {
+            addCriterion("joined_user_id not in", values, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdBetween(Long value1, Long value2) {
+            addCriterion("joined_user_id between", value1, value2, "joinedUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinedUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("joined_user_id not between", value1, value2, "joinedUserId");
+            return (Criteria) this;
+        }
     }
 
     /**

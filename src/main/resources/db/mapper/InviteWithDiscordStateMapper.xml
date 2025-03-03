@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper">
+
+    <select id="getInviteByState" parameterType="String" resultMap="org.techuni.TechUniInviteSystem.db.mapper.base.InviteMapper.BaseResultMap">
+        SELECT
+            i.*
+        FROM
+            invite i
+                LEFT JOIN
+            invite_discord_state ids ON i.id = ids.invite_id
+        WHERE
+            ids.state = #{state}
+    </select>
+
+    <delete id="cleanState">
+        DELETE ids
+        FROM invite_discord_state ids
+        LEFT JOIN invite i ON i.id = ids.invite_id
+        WHERE
+
+            i.is_disabled = 1 OR
+            i.is_used = 1 OR
+            <![CDATA[
+            (i.expires_at IS NOT NULL AND i.expires_at <= #{nowTime, jdbcType=TIMESTAMP}) OR
+            ]]>
+            <if test="stateExpireTime != null">
+                <![CDATA[
+                (ids.created_at <= #{stateExpireTime, jdbcType=TIMESTAMP})
+                ]]>
+            </if>
+
+    </delete>
+
+</mapper>

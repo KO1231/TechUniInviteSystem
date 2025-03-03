@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.techuni.TechUniInviteSystem.controller.DiscordController;
 import org.techuni.TechUniInviteSystem.controller.InviteAcceptController;
 import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
@@ -59,7 +60,8 @@ public class SecurityConfig {
                             .requestMatchers("/robots.txt").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
-                    authorizeRequests.requestMatchers("/accept/**").access(InviteAcceptController::check);
+                    authorizeRequests.requestMatchers("/accept/*").access(InviteAcceptController::check);
+                    authorizeRequests.requestMatchers("/discord/*").access(DiscordController::check);
 
 
                     /* Config依存ページ */

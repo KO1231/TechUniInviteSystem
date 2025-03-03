@@ -10,10 +10,19 @@ import org.springframework.stereotype.Component;
 @Getter
 public class DiscordConfig {
 
+    @Value("${techuni.discord.token}")
+    private String token;
+
     @Value("${techuni.discord.client-id}")
     private String clientId;
 
+    @Value("${techuni.discord.client-secret}")
+    private String clientSecret;
+
     @Value("${techuni.discord.endpoint.authenticated}")
     private String authenticatedEndpoint;
+
+    @Value("${techuni.discord.state.expirationSeconds}")
+    private int stateExpirationSeconds;
 
 }

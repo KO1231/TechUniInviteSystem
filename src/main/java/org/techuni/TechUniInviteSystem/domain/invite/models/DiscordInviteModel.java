@@ -7,7 +7,6 @@ import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
-import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 
 
@@ -17,10 +16,11 @@ import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 public class DiscordInviteModel extends AbstractInviteModel {
 
     String guildID;
+    String nickname;
 
     @Override
-    public InviteDto intoDto() {
-        return new InviteDto(dbId, invitationCode.toString(), searchId, isEnable, targetApplication, expiresAt, Map.of("guildID", guildID));
+    protected Map<String, Object> generateAdditionalData() {
+        return Map.of("guildID", guildID, "nickname", nickname);
     }
 
     public static AbstractInviteModel of(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
@@ -33,6 +33,7 @@ public class DiscordInviteModel extends AbstractInviteModel {
                 .targetApplication(targetApplication) //
                 .expiresAt(expiresAt) //
                 .guildID(Optional.ofNullable(data.get("guildID")).map(String::valueOf).orElseThrow()) //
+                .nickname(Optional.ofNullable(data.get("nickname")).map(String::valueOf).orElse(null)) //
                 .build();
     }
 }
