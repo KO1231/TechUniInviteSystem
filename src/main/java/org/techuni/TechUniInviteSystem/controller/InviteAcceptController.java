@@ -26,7 +26,7 @@ public class InviteAcceptController {
 
     private final InviteService inviteService;
 
-    //TODO エラーをruntimeにしている
+    // TODO エラーをruntimeにしている
     @GetMapping("/{inviteCode}")
     public IInviteAcceptResponse acceptInvite( //
             @Valid @NotBlank @PathVariable("inviteCode") String inviteCode) {

@@ -26,7 +26,7 @@ public class InviteService {
     }
 
     public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
-        final var targetApplication = inviteDto.targetApplication();
+        final var targetApplication = inviteDto.getTargetApplication();
 
         if (targetApplication.equals(TargetApplication.DISCORD)) {
             return discordInviteService.acceptInvite(inviteDto);

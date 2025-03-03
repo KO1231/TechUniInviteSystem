@@ -8,14 +8,25 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 
-public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
-        ZonedDateTime expiresAt, AbstractInviteAdditionalData data) {
+@Value
+@AllArgsConstructor
+public class InviteDto {
+
+    int dbId;
+    UUID invitationCode;
+    String searchId;
+    boolean isEnable;
+    TargetApplication targetApplication;
+    ZonedDateTime expiresAt;
+    AbstractInviteAdditionalData data;
 
     public InviteDto(int dbId, String invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication, ZonedDateTime expiresAt,
             AbstractInviteAdditionalData data) {
@@ -43,8 +54,8 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
 
         try {
             @SuppressWarnings("unchecked") //
-            final var model = (AbstractInviteModel<T>) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt,
-                    data);
+            final var model =
+                    (AbstractInviteModel<T>) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
 
             return model;
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
@@ -56,8 +67,8 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
-            throw ErrorCode.UNEXPECTED_ERROR.exception(
-                    "Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
+            throw ErrorCode.UNEXPECTED_ERROR
+                    .exception("Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
         }
 
         return modelClass.cast(intoModel());
