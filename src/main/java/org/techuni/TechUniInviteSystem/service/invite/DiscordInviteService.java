@@ -47,7 +47,7 @@ public class DiscordInviteService extends AbstractInviteService {
     }
 
     public void setJoinedUser(final int inviteId, final long userId) {
-        discordInviteRepository.setJoinedUser(inviteId, userId);
+        discordInviteRepository.addJoinedUser(inviteId, userId);
     }
 
     // 5分ごとにstateテーブルをclean
