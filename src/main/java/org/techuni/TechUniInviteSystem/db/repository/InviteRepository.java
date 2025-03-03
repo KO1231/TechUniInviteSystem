@@ -5,9 +5,9 @@ import static java.util.Objects.isNull;
 import java.time.ZoneId;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordExample;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteExample;
+import org.techuni.TechUniInviteSystem.db.mapper.CustomInviteMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteMapper;
@@ -22,6 +22,7 @@ public class InviteRepository {
 
     private final ZoneId ZONE;
     private final InviteMapper inviteMapper;
+    private final CustomInviteMapper customInviteMapper;
     private final InviteDiscordMapper inviteDiscordMapper;
     private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
@@ -72,25 +73,11 @@ public class InviteRepository {
     }
 
     public void useInvite(int inviteId) {
-        final var updateInviteSelective = new Invite();
-        updateInviteSelective.setIsUsed(true);
-
-        final var example = new InviteExample();
-        example.or() //
-                .andIdEqualTo(inviteId);
-
-        inviteMapper.updateByExampleSelective(updateInviteSelective, example);
+        customInviteMapper.addUsedCountToInvite(inviteId, 1);
     }
 
-    public void resetInviteUsedStatus(int inviteId) {
-        final var updateInviteSelective = new Invite();
-        updateInviteSelective.setIsUsed(false);
-
-        final var example = new InviteExample();
-        example.or() //
-                .andIdEqualTo(inviteId);
-
-        inviteMapper.updateByExampleSelective(updateInviteSelective, example);
+    public void revertUseInvite(int inviteId) {
+        customInviteMapper.addUsedCountToInvite(inviteId, -1);
     }
 
 }

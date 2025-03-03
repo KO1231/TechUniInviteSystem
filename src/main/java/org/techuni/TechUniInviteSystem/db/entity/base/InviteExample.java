@@ -515,6 +515,126 @@ public class InviteExample {
             return (Criteria) this;
         }
 
+        public Criteria andUsedIsNull() {
+            addCriterion("used is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedIsNotNull() {
+            addCriterion("used is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedEqualTo(Integer value) {
+            addCriterion("used =", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedNotEqualTo(Integer value) {
+            addCriterion("used <>", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedGreaterThan(Integer value) {
+            addCriterion("used >", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedGreaterThanOrEqualTo(Integer value) {
+            addCriterion("used >=", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedLessThan(Integer value) {
+            addCriterion("used <", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedLessThanOrEqualTo(Integer value) {
+            addCriterion("used <=", value, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedIn(List<Integer> values) {
+            addCriterion("used in", values, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedNotIn(List<Integer> values) {
+            addCriterion("used not in", values, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedBetween(Integer value1, Integer value2) {
+            addCriterion("used between", value1, value2, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsedNotBetween(Integer value1, Integer value2) {
+            addCriterion("used not between", value1, value2, "used");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedIsNull() {
+            addCriterion("max_used is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedIsNotNull() {
+            addCriterion("max_used is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedEqualTo(Integer value) {
+            addCriterion("max_used =", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedNotEqualTo(Integer value) {
+            addCriterion("max_used <>", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedGreaterThan(Integer value) {
+            addCriterion("max_used >", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedGreaterThanOrEqualTo(Integer value) {
+            addCriterion("max_used >=", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedLessThan(Integer value) {
+            addCriterion("max_used <", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedLessThanOrEqualTo(Integer value) {
+            addCriterion("max_used <=", value, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedIn(List<Integer> values) {
+            addCriterion("max_used in", values, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedNotIn(List<Integer> values) {
+            addCriterion("max_used not in", values, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedBetween(Integer value1, Integer value2) {
+            addCriterion("max_used between", value1, value2, "maxUsed");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxUsedNotBetween(Integer value1, Integer value2) {
+            addCriterion("max_used not between", value1, value2, "maxUsed");
+            return (Criteria) this;
+        }
+
         public Criteria andTargetAppIdIsNull() {
             addCriterion("target_app_id is null");
             return (Criteria) this;

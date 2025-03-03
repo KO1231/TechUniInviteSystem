@@ -6,11 +6,10 @@ import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscord;
-import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordExample;
+import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordJoinedUser;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordState;
 import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
-import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
+import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordJoinedUserMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordStateMapper;
 
 @Repository
@@ -18,8 +17,8 @@ import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordStateMapper;
 public class DiscordInviteRepository {
 
     private final ZoneId ZONE;
-    private final InviteDiscordMapper inviteDiscordMapper;
     private final InviteDiscordStateMapper inviteDiscordStateMapper;
+    private final InviteDiscordJoinedUserMapper inviteDiscordJoinedUserMapper;
     private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
     public void addInviteState(final int inviteId, final String stateString) {
@@ -37,15 +36,14 @@ public class DiscordInviteRepository {
                 Optional.ofNullable(stateExpireTime).map(LocalDateTime.now(ZONE)::minus).orElse(null));
     }
 
-    public void setJoinedUser(final int inviteId, final long userId) {
-        final var joinedId = new InviteDiscord();
-        joinedId.setJoinedUserId(userId);
+    public void addJoinedUser(final int inviteId, final long userId) {
+        final var joinedUser = new InviteDiscordJoinedUser();
 
-        final var example = new InviteDiscordExample();
-        example.or() //
-                .andInviteIdEqualTo(inviteId);
+        joinedUser.setInviteId(inviteId);
+        joinedUser.setUserId(userId);
+        joinedUser.setJoinedAt(LocalDateTime.now(ZONE));
 
-        inviteDiscordMapper.updateByExampleSelective(joinedId, example);
+        inviteDiscordJoinedUserMapper.insert(joinedUser);
     }
 
 }
