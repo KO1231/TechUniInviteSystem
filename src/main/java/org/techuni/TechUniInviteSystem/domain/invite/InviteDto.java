@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
 
 public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication,
         ZonedDateTime expiresAt, Map<String, Object> data) {
@@ -28,7 +29,7 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
                 expiresAt.orElse(null), additionalData);
     }
 
-    public AbstractInviteModel intoModel() {
+    public <T extends AbstractInviteAdditionalData> AbstractInviteModel<T> intoModel() {
         final var modelClass = targetApplication.getModelClass();
         final Method ofMethod;
         try {
@@ -38,17 +39,18 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
             throw new RuntimeException("Cannot find of method in model class", e);
         }
 
-        final AbstractInviteModel model;
         try {
-            model = (AbstractInviteModel) ofMethod.invoke(modelClass, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
-        } catch (InvocationTargetException | IllegalAccessException e) {
+            @SuppressWarnings("unchecked") //
+            final var model = (AbstractInviteModel<T>) ofMethod.invoke(modelClass, dbId, invitationCode, searchId, isEnable, targetApplication,
+                    expiresAt, data);
+
+            return model;
+        } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
             throw new RuntimeException(e);
         }
-
-        return model;
     }
 
-    public <M extends AbstractInviteModel> M intoModel(Class<M> modelClass) {
+    public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
             throw new IllegalArgumentException("Model class is not matched.");
@@ -61,7 +63,7 @@ public record InviteDto(int dbId, UUID invitationCode, String searchId, boolean 
         final Method ofMethod;
         try {
             ofMethod = responseClazz.getMethod("of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class, ZonedDateTime.class,
-                    Map.class);
+                    AbstractInviteAdditionalData.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("Cannot find of method in response class", e);
         }

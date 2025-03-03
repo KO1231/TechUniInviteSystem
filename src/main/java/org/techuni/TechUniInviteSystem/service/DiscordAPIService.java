@@ -18,7 +18,9 @@ public class DiscordAPIService {
 
     public DiscordJoinSuccessResponse joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
-        final var guildIdStr = invite.getGuildID();
+        final var discordInvite = invite.getAdditionalData();
+
+        final var guildIdStr = discordInvite.getGuildID();
         final var guildId = Long.parseLong(guildIdStr);
 
         if (api.isGuildMember(guildId)) {
@@ -27,7 +29,7 @@ public class DiscordAPIService {
         }
 
         inviteService.useInvite(inviteDto);
-        final var memberData = api.joinGuild(guildId, invite.getNickname());
+        final var memberData = api.joinGuild(guildId, discordInvite.getNickname());
         discordInviteService.setJoinedUser(invite.getDbId(), memberData.user().id().asLong());
 
         return new DiscordJoinSuccessResponse(guildIdStr);
