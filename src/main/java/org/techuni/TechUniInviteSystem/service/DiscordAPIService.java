@@ -3,14 +3,12 @@ package org.techuni.TechUniInviteSystem.service;
 import discord4j.discordjson.json.AllowedMentionsData;
 import discord4j.discordjson.json.MemberData;
 import discord4j.discordjson.json.MessageCreateRequest;
-import discord4j.rest.util.MultipartRequest;
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.techuni.TechUniInviteSystem.config.DiscordConfig;
 import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordJoinSuccessResponse;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
@@ -20,14 +18,15 @@ import org.techuni.TechUniInviteSystem.external.discord.DiscordAPI;
 import org.techuni.TechUniInviteSystem.external.discord.template.DiscordTemplateEngine;
 import org.techuni.TechUniInviteSystem.external.discord.template.IDiscordMessageVariables;
 import org.techuni.TechUniInviteSystem.external.discord.template.variables.JoinServerDMVariable;
+import org.techuni.TechUniInviteSystem.service.DiscordDMService.DiscordMessageAttachment;
 import org.techuni.TechUniInviteSystem.service.invite.DiscordInviteService;
-import reactor.util.function.Tuple2;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class DiscordAPIService {
 
+    private final DiscordConfig config;
     private final InviteService inviteService;
     private final DiscordInviteService discordInviteService;
     private final DiscordTemplateEngine templateEngine;
@@ -71,23 +70,30 @@ public class DiscordAPIService {
                 Optional.ofNullable(invite.getAdditionalData().getNickname()).orElse(userData.username()) //
         );
         try {
-            sendJoinGuildDM(userId, dmVariable, null); //TODO 画像
+            scheduleJoinGuildDM(userId, dmVariable);
         } catch (Exception e) {
-            log.error("Some error occurred while sending DM to user. (JoinServerDM)", e);
+            log.error("Some error occurred while scheduling DM to user. (JoinServerDM)", e);
         }
 
         return new DiscordJoinSuccessResponse(guildIdStr);
     }
 
-    public void sendJoinGuildDM(long userId, IDiscordMessageVariables variables, List<Tuple2<String, InputStream>> attachments) {
+    public void scheduleJoinGuildDM(long userId, IDiscordMessageVariables variables) {
+        final var attachments = config.getJoinServerDMAttachment() //
+                .map(resource -> new DiscordMessageAttachment("image.png", resource, config.isForceJoinServerDMAttachment())) //
+                .map(List::of) //
+                .orElse(null); //
+
         final var message = templateEngine.process(variables);
 
         final var userIdStr = String.valueOf(userId);
-        final MultipartRequest<MessageCreateRequest> messageRequest = MultipartRequest.ofRequestAndFiles( //
-                MessageCreateRequest.builder().content(message) //
-                        .allowedMentions(AllowedMentionsData.builder().addUser(userIdStr).build()).build(), //
-                Optional.ofNullable(attachments).orElse(Collections.emptyList()));
+        final MessageCreateRequest messageRequest = MessageCreateRequest.builder() //
+                .content(message) //
+                .allowedMentions(AllowedMentionsData.builder() //
+                        .addUser(userIdStr) //
+                        .build() //
+                ).build();
 
-        discordDMService.scheduleDM(userIdStr, messageRequest);
+        discordDMService.scheduleDM(userIdStr, messageRequest, attachments);
     }
 }
