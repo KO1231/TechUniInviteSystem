@@ -1,20 +1,27 @@
 package org.techuni.TechUniInviteSystem.controller.request.invite;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.validator.constraints.Length;
+import org.apache.commons.lang3.StringUtils;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordInviteAdditionalData;
 
 @SuperBuilder
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class CreateDiscordInviteRequest extends CreateInviteRequest {
+public class CreateDiscordInviteRequest extends AbstractCreateInviteRequest {
 
     @NotNull
     long guildId;
 
-    @Length(max = 32)
+    @Size(max = 32)
     String nickname;
 
+    @Override
+    public AbstractInviteAdditionalData generateAdditionalData() {
+        return new DiscordInviteAdditionalData(String.valueOf(guildId), StringUtils.isBlank(nickname) ? null : nickname);
+    }
 }

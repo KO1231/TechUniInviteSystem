@@ -42,6 +42,10 @@ public class InviteService {
         throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
     }
 
+    public void createInvite(final InviteDto inviteDto) {
+        inviteRepository.createInvite(inviteDto);
+    }
+
     public void useInvite(final InviteDto inviteDto) {
         inviteRepository.useInvite(inviteDto.intoModel().getDbId());
     }

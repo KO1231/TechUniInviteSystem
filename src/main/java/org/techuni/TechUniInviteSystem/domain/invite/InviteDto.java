@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.techuni.TechUniInviteSystem.controller.request.invite.AbstractCreateInviteRequest;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
@@ -40,6 +41,14 @@ public class InviteDto {
 
         return new InviteDto(invite.getId(), invite.getCode(), invite.getSearchId(), invite.getIsDisabled(), invite.getUsed(), invite.getMaxUsed(),
                 TargetApplication.getById(invite.getTargetAppId()), expiresAt.orElse(null), additionalData);
+    }
+
+    public static InviteDto fromRequest(final AbstractCreateInviteRequest request, final ZoneId zone) {
+        final var inviteRequest = request.getInvite();
+        final var expiresAt = Optional.ofNullable(inviteRequest.getExpirationDate()).map(t -> t.withZoneSameInstant(zone));
+
+        return new InviteDto(-1, UUID.randomUUID().toString(), inviteRequest.getSearchId(), false, 0, inviteRequest.getMaxUsed(),
+                inviteRequest.getTargetApp(), expiresAt.orElse(null), request.generateAdditionalData());
     }
 
     public <T extends AbstractInviteAdditionalData> AbstractInviteModel<T> intoModel() {
