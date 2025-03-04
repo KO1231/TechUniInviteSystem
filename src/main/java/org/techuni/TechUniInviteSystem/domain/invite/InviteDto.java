@@ -76,7 +76,9 @@ public class InviteDto {
     public Invite intoDB() {
         final var invite = new Invite();
 
-        invite.setId(dbId);
+        if (dbId > 0) {
+            invite.setId(dbId);
+        }
         invite.setCode(invitationCode.toString());
         invite.setSearchId(searchId);
         invite.setIsDisabled(isDisabled);
