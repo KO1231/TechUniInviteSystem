@@ -123,7 +123,7 @@ public enum ErrorCode {
     }
 
     public String getUserOutputMessage() {
-        return Optional.ofNullable(userOutputMessage).map(ErrorMessage::getMessage).orElse(null);
+        return Optional.ofNullable(userOutputMessage).map(ErrorMessage::getMessage).orElse(status.getReasonPhrase());
     }
 
     @Getter

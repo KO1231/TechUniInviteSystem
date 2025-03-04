@@ -18,7 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.controller.DiscordController;
 import org.techuni.TechUniInviteSystem.controller.InviteAcceptController;
-import org.techuni.TechUniInviteSystem.controller.PostInviteController;
+import org.techuni.TechUniInviteSystem.controller.InviteController;
+import org.techuni.TechUniInviteSystem.controller.LoginController;
 import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
 
@@ -59,15 +60,14 @@ public class SecurityConfig {
                             .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                             // public dirは全許可
                             .requestMatchers("/public/**").permitAll()
-                            // ログインページは全許可
-                            .requestMatchers("/login").permitAll()
                             // その他publicファイルを指定 (全許可)
                             .requestMatchers("/robots.txt").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
+                    authorizeRequests.requestMatchers("/login").access(LoginController::check);
                     authorizeRequests.requestMatchers("/accept/*").access(InviteAcceptController::check);
                     authorizeRequests.requestMatchers("/discord/*").access(DiscordController::check);
-                    authorizeRequests.requestMatchers("/new").access(PostInviteController::check);
+                    authorizeRequests.requestMatchers("/invite").access(InviteController::check);
 
 
                     /* Config依存ページ */

@@ -20,9 +20,9 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 import org.techuni.TechUniInviteSystem.util.AuthorityUtil;
 
 @RestController
-@RequestMapping("/new")
+@RequestMapping("/invite")
 @AllArgsConstructor
-public class PostInviteController {
+public class InviteController {
 
     private final ZoneId zoneId;
     private final InviteService inviteService;

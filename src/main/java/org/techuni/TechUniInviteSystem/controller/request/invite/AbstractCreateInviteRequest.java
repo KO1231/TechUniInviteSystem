@@ -14,6 +14,10 @@ public abstract class AbstractCreateInviteRequest {
     @NotNull
     protected CreateInviteRequest invite;
 
+    protected AbstractCreateInviteRequest(CreateInviteRequest invite) {
+        this.invite = invite;
+    }
+
     public abstract AbstractInviteAdditionalData generateAdditionalData();
 
 }
