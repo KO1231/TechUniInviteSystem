@@ -23,39 +23,39 @@ public class InviteDto {
     int dbId;
     UUID invitationCode;
     String searchId;
-    boolean isEnable;
+    boolean isDisabled;
+    int used;
+    int maxUsed;
     TargetApplication targetApplication;
     ZonedDateTime expiresAt;
     AbstractInviteAdditionalData data;
 
-    public InviteDto(int dbId, String invitationCode, String searchId, boolean isEnable, TargetApplication targetApplication, ZonedDateTime expiresAt,
-            AbstractInviteAdditionalData data) {
-        this(dbId, UUID.fromString(invitationCode), searchId, isEnable, targetApplication, expiresAt, data);
+    public InviteDto(int dbId, String invitationCode, String searchId, boolean isDisabled, int used, int maxUsed, TargetApplication targetApplication,
+            ZonedDateTime expiresAt, AbstractInviteAdditionalData data) {
+        this(dbId, UUID.fromString(invitationCode), searchId, isDisabled, used, maxUsed, targetApplication, expiresAt, data);
     }
 
     public static InviteDto fromDB(final Invite invite, final ZoneId zone, final AbstractInviteAdditionalData additionalData) {
         final var expiresAt = Optional.ofNullable(invite.getExpiresAt()).map(t -> t.atZone(zone));
-        final boolean isEnable = !invite.getIsDisabled() && !invite.getIsUsed() && //
-                expiresAt.map(t -> t.isAfter(ZonedDateTime.now(zone))).orElse(true);
 
-        return new InviteDto(invite.getId(), invite.getCode(), invite.getSearchId(), isEnable, TargetApplication.getById(invite.getTargetAppId()),
-                expiresAt.orElse(null), additionalData);
+        return new InviteDto(invite.getId(), invite.getCode(), invite.getSearchId(), invite.getIsDisabled(), invite.getUsed(), invite.getMaxUsed(),
+                TargetApplication.getById(invite.getTargetAppId()), expiresAt.orElse(null), additionalData);
     }
 
     public <T extends AbstractInviteAdditionalData> AbstractInviteModel<T> intoModel() {
         final var modelClass = targetApplication.getModelClass();
         final Method ofMethod;
         try {
-            ofMethod = findMethod(modelClass, true, "of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class,
-                    ZonedDateTime.class);
+            ofMethod = findMethod(modelClass, true, "of", int.class, UUID.class, String.class, boolean.class, int.class, int.class,
+                    TargetApplication.class, ZonedDateTime.class);
         } catch (NoSuchMethodException e) {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in model class. (Class: %s)".formatted(modelClass.getName()));
         }
 
         try {
             @SuppressWarnings("unchecked") //
-            final var model =
-                    (AbstractInviteModel<T>) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
+            final var model = (AbstractInviteModel<T>) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed,
+                    targetApplication, expiresAt, data);
 
             return model;
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
@@ -67,8 +67,8 @@ public class InviteDto {
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
-            throw ErrorCode.UNEXPECTED_ERROR
-                    .exception("Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
+            throw ErrorCode.UNEXPECTED_ERROR.exception(
+                    "Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
         }
 
         return modelClass.cast(intoModel());
@@ -77,15 +77,16 @@ public class InviteDto {
     public <R extends AbstractInviteResponse> R intoResponse(final Class<R> responseClazz) {
         final Method ofMethod;
         try {
-            ofMethod = findMethod(responseClazz, true, "of", int.class, UUID.class, String.class, boolean.class, TargetApplication.class,
-                    ZonedDateTime.class);
+            ofMethod = findMethod(responseClazz, true, "of", int.class, UUID.class, String.class, boolean.class, int.class, int.class,
+                    TargetApplication.class, ZonedDateTime.class);
         } catch (NoSuchMethodException e) {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in response class. (Class: %s)".formatted(responseClazz.getName()));
         }
 
         final AbstractInviteResponse response;
         try {
-            response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isEnable, targetApplication, expiresAt, data);
+            response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed, targetApplication,
+                    expiresAt, data);
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e,
                     "Some error occurred while creating response instance. (Class: %s)".formatted(responseClazz.getName()));

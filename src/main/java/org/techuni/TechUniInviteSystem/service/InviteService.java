@@ -1,5 +1,6 @@
 package org.techuni.TechUniInviteSystem.service;
 
+import java.time.ZoneId;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class InviteService {
 
     private final InviteRepository inviteRepository;
     private final DiscordInviteService discordInviteService;
+    private final ZoneId zoneId;
 
     public Optional<InviteDto> getInviteByCode(final String code) {
         return Optional.ofNullable(inviteRepository.getInviteByCode(code));
@@ -26,6 +28,11 @@ public class InviteService {
     }
 
     public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
+        final var model = inviteDto.intoModel();
+        if (!model.isEnable(zoneId)) {
+            throw ErrorCode.INVITATION_INVALID.exception(model.getInvitationCode().toString());
+        }
+
         final var targetApplication = inviteDto.getTargetApplication();
 
         if (targetApplication.equals(TargetApplication.DISCORD)) {

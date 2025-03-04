@@ -41,9 +41,6 @@ public class InviteAcceptController {
             throw ErrorCode.INVITATION_NOT_FOUND.exception(inviteCode);
         }
         final var inviteDto = _inviteDto.get();
-        if (!inviteDto.isEnable()) {
-            throw ErrorCode.INVITATION_INVALID.exception(inviteCode);
-        }
 
         return inviteService.acceptInvite(inviteDto);
     }

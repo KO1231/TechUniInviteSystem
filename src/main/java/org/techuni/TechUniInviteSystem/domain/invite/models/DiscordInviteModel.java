@@ -16,13 +16,15 @@ public class DiscordInviteModel extends AbstractInviteModel<DiscordInviteAdditio
 
     DiscordInviteAdditionalData additionalData;
 
-    public static AbstractInviteModel<DiscordInviteAdditionalData> of(int dbId, UUID invitationCode, String searchId, boolean isEnable,
-            TargetApplication targetApplication, ZonedDateTime expiresAt, DiscordInviteAdditionalData data) {
+    public static AbstractInviteModel<DiscordInviteAdditionalData> of(int dbId, UUID invitationCode, String searchId, boolean isDisabled, int used,
+            int maxUsed, TargetApplication targetApplication, ZonedDateTime expiresAt, DiscordInviteAdditionalData data) {
         return DiscordInviteModel.builder() //
                 .dbId(dbId) //
                 .invitationCode(invitationCode) //
                 .searchId(searchId) //
-                .isEnable(isEnable) //
+                .isDisabled(isDisabled) //
+                .used(used) //
+                .maxUsed(maxUsed) //
                 .targetApplication(targetApplication) //
                 .expiresAt(expiresAt) //
                 .additionalData(data) //

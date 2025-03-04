@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
-import org.techuni.TechUniInviteSystem.external.discord.DiscordAPIFactory;
 import org.techuni.TechUniInviteSystem.service.DiscordAPIService;
 import org.techuni.TechUniInviteSystem.service.InviteService;
 
@@ -22,7 +21,6 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 @AllArgsConstructor
 public class DiscordController {
 
-    private final DiscordAPIFactory discordAPIFactory;
     private final DiscordAPIService discordAPIService;
     private final InviteService inviteService;
 
@@ -45,13 +43,7 @@ public class DiscordController {
         }
         final var inviteDto = _inviteDto.get();
 
-        if (!inviteDto.isEnable()) {
-            throw ErrorCode.INVITATION_INVALID.exception(code);
-        }
-
-        final var api = discordAPIFactory.createAPI(code);
-
-        return discordAPIService.joinGuild(api, inviteDto);
+        return discordAPIService.joinGuild(code, inviteDto);
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {
