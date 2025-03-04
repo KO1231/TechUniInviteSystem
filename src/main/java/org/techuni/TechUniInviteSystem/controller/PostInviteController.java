@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.techuni.TechUniInviteSystem.controller.request.invite.CreateDiscordInviteRequest;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.security.UserAuthority;
+import org.techuni.TechUniInviteSystem.service.InviteService;
 import org.techuni.TechUniInviteSystem.util.AuthorityUtil;
 
 @RestController
@@ -24,10 +25,12 @@ import org.techuni.TechUniInviteSystem.util.AuthorityUtil;
 public class PostInviteController {
 
     private final ZoneId zoneId;
+    private final InviteService inviteService;
 
     @PostMapping
     public void handlePostInvite(@Validated @NotNull @RequestBody final CreateDiscordInviteRequest request) {
         final var dto = InviteDto.fromRequest(request, zoneId);
+        inviteService.createInvite(dto);
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {

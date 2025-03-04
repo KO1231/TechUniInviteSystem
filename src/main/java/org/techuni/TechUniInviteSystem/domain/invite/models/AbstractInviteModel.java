@@ -40,6 +40,10 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
         return this.isEnable(ZonedDateTime.now(zoneId));
     }
 
+    public boolean isDBRegistered() {
+        return dbId > 0;
+    }
+
     protected ADDITIONAL getAdditionalData() {
         return null;
     }

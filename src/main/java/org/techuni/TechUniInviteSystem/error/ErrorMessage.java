@@ -27,6 +27,7 @@ public enum ErrorMessage {
             "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
     INTERNAL_INVITATION_ALREADY_USED("Request Already Used Invitation Code. (Code: %s)"), //
     INTERNAL_INVITATION_INVALID("Request Invalid Invitation Code. (Code: %s)"), //
+    INTERNAL_INVITATION_CREATE_REGISTERED_INVITE("Request Create Registered Invite."), //
 
     /* DISCORD INVITATION */
     INTERNAL_DISCORD_ALREADY_JOINED(

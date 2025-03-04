@@ -26,6 +26,18 @@ public class InviteRepository {
     private final InviteDiscordMapper inviteDiscordMapper;
     private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
+    public InviteDto createInvite(InviteDto inviteDto) {
+        final var invite = inviteDto.intoDB();
+        inviteMapper.insert(invite);
+
+        final var createdInvite = inviteMapper.selectByPrimaryKey(invite.getId());
+        if (isNull(createdInvite)) {
+            throw new IllegalStateException("Failed to create invite.");
+        }
+
+        return InviteDto.fromDB(invite, ZONE, inviteDto.getData());
+    }
+
     public InviteDto getInviteByCode(String code) {
         final var searchExample = new InviteExample();
 

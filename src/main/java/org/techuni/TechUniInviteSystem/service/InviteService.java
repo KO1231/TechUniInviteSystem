@@ -36,7 +36,6 @@ public class InviteService {
         }
 
         final var targetApplication = inviteDto.getTargetApplication();
-
         if (targetApplication.equals(TargetApplication.DISCORD)) {
             return discordInviteService.acceptInvite(inviteDto);
         }
@@ -44,8 +43,20 @@ public class InviteService {
         throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
     }
 
+    @Transactional
     public void createInvite(final InviteDto inviteDto) {
-        inviteRepository.createInvite(inviteDto);
+        final var model = inviteDto.intoModel();
+        if (model.isDBRegistered() || model.isUsed()) {
+            throw ErrorCode.INVITATION_CREATE_REGISTERED_INVITE.exception(model.getInvitationCode().toString());
+        }
+
+        final var createdDto = inviteRepository.createInvite(inviteDto);
+
+        final var targetApplication = createdDto.getTargetApplication();
+        if (targetApplication.equals(TargetApplication.DISCORD)) {
+            discordInviteService.createInvite(createdDto);
+        }
+
     }
 
     public void useInvite(final InviteDto inviteDto) {

@@ -73,6 +73,21 @@ public class InviteDto {
         }
     }
 
+    public Invite intoDB() {
+        final var invite = new Invite();
+
+        invite.setId(dbId);
+        invite.setCode(invitationCode.toString());
+        invite.setSearchId(searchId);
+        invite.setIsDisabled(isDisabled);
+        invite.setUsed(used);
+        invite.setMaxUsed(maxUsed);
+        invite.setTargetAppId(targetApplication.getId());
+        invite.setExpiresAt(expiresAt.toLocalDateTime());
+
+        return invite;
+    }
+
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {

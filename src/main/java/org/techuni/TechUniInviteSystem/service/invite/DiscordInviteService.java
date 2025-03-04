@@ -9,11 +9,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.techuni.TechUniInviteSystem.config.DiscordConfig;
 import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordAuthRequestResponse;
 import org.techuni.TechUniInviteSystem.db.repository.DiscordInviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
+import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
+import org.techuni.TechUniInviteSystem.error.ErrorCode;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +39,7 @@ public class DiscordInviteService extends AbstractInviteService {
     }
 
     @Override
+    @Transactional
     public DiscordAuthRequestResponse acceptInvite(InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         final var state = RandomStringUtils.secureStrong() //
@@ -44,6 +48,21 @@ public class DiscordInviteService extends AbstractInviteService {
         discordInviteRepository.addInviteState(invite.getDbId(), state);
 
         return new DiscordAuthRequestResponse(clientId, authenticatedEndpoint, state);
+    }
+
+    @Override
+    @Transactional
+    public InviteDto createInvite(InviteDto inviteDto) {
+        if (!inviteDto.getTargetApplication().equals(TargetApplication.DISCORD)) {
+            throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(inviteDto.getTargetApplication()));
+        }
+
+        final var model = inviteDto.intoModel(DiscordInviteModel.class);
+        final var additionalData = model.getAdditionalData();
+
+        discordInviteRepository.createInvite(model.getDbId(), Long.parseLong(additionalData.getGuildID()), additionalData.getNickname());
+
+        return inviteDto;
     }
 
     public void setJoinedUser(final int inviteId, final long userId) {
