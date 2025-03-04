@@ -3,6 +3,7 @@ package org.techuni.TechUniInviteSystem.service;
 import discord4j.discordjson.json.AllowedMentionsData;
 import discord4j.discordjson.json.MemberData;
 import discord4j.discordjson.json.MessageCreateRequest;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.error.MyHttpException;
-import org.techuni.TechUniInviteSystem.external.discord.DiscordAPI;
+import org.techuni.TechUniInviteSystem.external.discord.DiscordAPIFactory;
 import org.techuni.TechUniInviteSystem.external.discord.template.DiscordTemplateEngine;
 import org.techuni.TechUniInviteSystem.external.discord.template.IDiscordMessageVariables;
 import org.techuni.TechUniInviteSystem.external.discord.template.variables.JoinServerDMVariable;
@@ -26,14 +27,21 @@ import org.techuni.TechUniInviteSystem.service.invite.DiscordInviteService;
 @AllArgsConstructor
 public class DiscordAPIService {
 
+    private final DiscordAPIFactory discordAPIFactory;
     private final DiscordConfig config;
     private final InviteService inviteService;
     private final DiscordInviteService discordInviteService;
     private final DiscordTemplateEngine templateEngine;
     private final DiscordDMService discordDMService;
+    private final ZoneId zoneId;
 
-    public DiscordJoinSuccessResponse joinGuild(final DiscordAPI api, final InviteDto inviteDto) {
+    public DiscordJoinSuccessResponse joinGuild(final String code, final InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
+        if (!invite.isEnable(zoneId)) {
+            throw ErrorCode.INVITATION_INVALID.exception(code);
+        }
+
+        final var api = discordAPIFactory.createAPI(code);
         final var discordInvite = invite.getAdditionalData();
 
         final var guildIdStr = discordInvite.getGuildID();

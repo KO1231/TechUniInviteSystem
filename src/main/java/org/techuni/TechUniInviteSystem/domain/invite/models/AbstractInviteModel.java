@@ -1,6 +1,8 @@
 package org.techuni.TechUniInviteSystem.domain.invite.models;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -16,12 +18,26 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
     int dbId;
     UUID invitationCode;
     String searchId;
-    boolean isEnable;
+    boolean isDisabled;
+    int used;
+    int maxUsed;
     TargetApplication targetApplication;
     ZonedDateTime expiresAt;
 
     public InviteDto intoDto() {
-        return new InviteDto(dbId, invitationCode.toString(), searchId, isEnable, targetApplication, expiresAt, getAdditionalData());
+        return new InviteDto(dbId, invitationCode.toString(), searchId, isDisabled, used, maxUsed, targetApplication, expiresAt, getAdditionalData());
+    }
+
+    public boolean isUsed() {
+        return used >= maxUsed;
+    }
+
+    public boolean isEnable(ZonedDateTime time) {
+        return !isDisabled && !isUsed() && Optional.ofNullable(expiresAt).map(time::isAfter).orElse(true);
+    }
+
+    public boolean isEnable(ZoneId zoneId) {
+        return this.isEnable(ZonedDateTime.now(zoneId));
     }
 
     protected ADDITIONAL getAdditionalData() {
@@ -29,7 +45,7 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
     }
 
     public static <ADDITIONAL extends AbstractInviteAdditionalData> AbstractInviteModel<ADDITIONAL> of(int dbId, UUID invitationCode, String searchId,
-            boolean isEnable, TargetApplication targetApplication, ZonedDateTime expiresAt, ADDITIONAL data) {
+            boolean isDisabled, int used, int maxUsed, TargetApplication targetApplication, ZonedDateTime expiresAt, ADDITIONAL data) {
         throw ErrorCode.UNEXPECTED_ERROR.exception("Not implemented (AbstractInviteModel::of).");
     }
 }
