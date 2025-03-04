@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class CreateInviteRequest {
 
     @Builder.Default
     @JsonProperty("maxUsed")
+    @Min(1)
     private final int maxUsed = 1;
 
     @JsonProperty("expirationDate")
