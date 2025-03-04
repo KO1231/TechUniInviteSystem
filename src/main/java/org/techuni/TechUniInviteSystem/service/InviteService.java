@@ -4,6 +4,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
@@ -27,6 +28,7 @@ public class InviteService {
         return Optional.ofNullable(inviteRepository.getInviteByState(state));
     }
 
+    @Transactional
     public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
         final var model = inviteDto.intoModel();
         if (!model.isEnable(zoneId)) {
