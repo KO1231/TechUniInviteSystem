@@ -28,12 +28,7 @@ public class InviteRepository {
 
     public InviteDto createInvite(InviteDto inviteDto) {
         final var invite = inviteDto.intoDB();
-        inviteMapper.insert(invite);
-
-        final var createdInvite = inviteMapper.selectByPrimaryKey(invite.getId());
-        if (isNull(createdInvite)) {
-            throw new IllegalStateException("Failed to create invite.");
-        }
+        customInviteMapper.insertInvite(invite);
 
         return InviteDto.fromDB(invite, ZONE, inviteDto.getData());
     }
