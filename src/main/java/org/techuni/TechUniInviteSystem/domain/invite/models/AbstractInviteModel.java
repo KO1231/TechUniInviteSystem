@@ -45,6 +45,7 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
     }
 
     protected ADDITIONAL getAdditionalData() {
+        // lombok で override想定
         return null;
     }
 
