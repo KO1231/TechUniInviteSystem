@@ -54,6 +54,15 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
     @Transactional
     public DiscordAuthRequestResponse acceptInvite(InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
+        final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
+        try {
+            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
+                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            }
+        } catch (ClientException e) {
+            throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+        }
+
         final var state = RandomStringUtils.secureStrong() //
                 .nextAlphanumeric(STATE_LENGTH);
 
