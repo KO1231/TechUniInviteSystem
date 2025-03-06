@@ -87,12 +87,22 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
     @Transactional
     public DiscordJoinSuccessResponse useInvite(final InviteDto inviteDto, final DiscordUsingInviteAddtionalData additionalData) {
-        final var code = additionalData.getCode();
+        final var invitationCode = inviteDto.getInvitationCode().toString();
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         if (!invite.isEnable(zoneId)) {
-            throw ErrorCode.INVITATION_INVALID.exception(code);
+            throw ErrorCode.INVITATION_INVALID.exception(invitationCode);
         }
 
+        final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
+        try {
+            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
+                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            }
+        } catch (ClientException e) {
+            throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+        }
+
+        final var code = additionalData.getCode();
         final var api = discordAPIFactory.createAPI(code);
 
         // execute
@@ -118,7 +128,7 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
             log.error("Some error occurred while scheduling DM to user. (JoinServerDM)", e);
         }
 
-        return new DiscordJoinSuccessResponse(Long.parseLong(invite.getAdditionalData().getGuildID()));
+        return new DiscordJoinSuccessResponse(guildId);
     }
 
     // 5分ごとにstateテーブルをclean
