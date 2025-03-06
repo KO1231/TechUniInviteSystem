@@ -52,27 +52,6 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
     @Override
     @Transactional
-    public DiscordAuthRequestResponse acceptInvite(InviteDto inviteDto) {
-        final var invite = inviteDto.intoModel(DiscordInviteModel.class);
-        final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
-        try {
-            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
-                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
-            }
-        } catch (ClientException e) {
-            throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
-        }
-
-        final var state = RandomStringUtils.secureStrong() //
-                .nextAlphanumeric(STATE_LENGTH);
-
-        discordInviteRepository.addInviteState(invite.getDbId(), state);
-
-        return new DiscordAuthRequestResponse(clientId, authenticatedEndpoint, state);
-    }
-
-    @Override
-    @Transactional
     public InviteDto createInvite(InviteDto inviteDto) {
         if (!inviteDto.getTargetApplication().equals(TargetApplication.DISCORD)) {
             throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(inviteDto.getTargetApplication()));
@@ -92,6 +71,27 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
         discordInviteRepository.createInvite(model.getDbId(), guildId, additionalData.getNickname());
 
         return inviteDto;
+    }
+
+    @Override
+    @Transactional
+    public DiscordAuthRequestResponse acceptInvite(InviteDto inviteDto) {
+        final var invite = inviteDto.intoModel(DiscordInviteModel.class);
+        final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
+        try {
+            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
+                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            }
+        } catch (ClientException e) {
+            throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+        }
+
+        final var state = RandomStringUtils.secureStrong() //
+                .nextAlphanumeric(STATE_LENGTH);
+
+        discordInviteRepository.addInviteState(invite.getDbId(), state);
+
+        return new DiscordAuthRequestResponse(clientId, authenticatedEndpoint, state);
     }
 
     @Transactional
