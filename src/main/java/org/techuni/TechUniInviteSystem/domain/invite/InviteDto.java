@@ -100,7 +100,7 @@ public class InviteDto {
         return modelClass.cast(intoModel());
     }
 
-    public <R extends AbstractInviteResponse> R intoResponse(final Class<R> responseClazz) {
+    public <R extends AbstractInviteResponse<?>> R intoResponse(final Class<R> responseClazz) {
         final Method ofMethod;
         try {
             ofMethod = findMethod(responseClazz, true, "of", int.class, UUID.class, String.class, boolean.class, int.class, int.class,
@@ -109,9 +109,9 @@ public class InviteDto {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in response class. (Class: %s)".formatted(responseClazz.getName()));
         }
 
-        final AbstractInviteResponse response;
+        final AbstractInviteResponse<?> response;
         try {
-            response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed, targetApplication,
+            response = (AbstractInviteResponse<?>) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed, targetApplication,
                     expiresAt, data);
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e,
