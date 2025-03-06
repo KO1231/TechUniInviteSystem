@@ -1,6 +1,10 @@
 package org.techuni.TechUniInviteSystem.service.invite;
 
+import static java.util.Objects.isNull;
+
+import discord4j.common.util.Snowflake;
 import discord4j.rest.RestClient;
+import discord4j.rest.http.client.ClientException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -64,11 +68,19 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
         if (!inviteDto.getTargetApplication().equals(TargetApplication.DISCORD)) {
             throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(inviteDto.getTargetApplication()));
         }
-
         final var model = inviteDto.intoModel(DiscordInviteModel.class);
         final var additionalData = model.getAdditionalData();
+        final var guildId = Long.parseLong(additionalData.getGuildID());
 
-        discordInviteRepository.createInvite(model.getDbId(), Long.parseLong(additionalData.getGuildID()), additionalData.getNickname());
+        try {
+            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
+                throw ErrorCode.DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            }
+        } catch (ClientException e) {
+            throw ErrorCode.DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR.exception(e, String.valueOf(guildId));
+        }
+
+        discordInviteRepository.createInvite(model.getDbId(), guildId, additionalData.getNickname());
 
         return inviteDto;
     }
