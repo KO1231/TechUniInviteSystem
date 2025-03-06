@@ -23,6 +23,7 @@ public class DiscordAuthRequestView extends RedirectView implements IInviteAccep
             .queryParam("client_id", "{CLIENT_ID}") //
             .queryParam("response_type", "code") //
             .queryParam("redirect_uri", "{REDIRECT_URI}") //
+            .queryParam("prompt", "none") //
             .queryParam("scope", String.join("+", SCOPE.stream().map(Scope::getValue).toList())) //
             .queryParam("state", "{STATE}");
 
