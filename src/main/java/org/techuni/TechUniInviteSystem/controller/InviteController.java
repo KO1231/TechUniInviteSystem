@@ -29,6 +29,7 @@ public class InviteController {
 
     @PostMapping
     public void handlePostInvite(@Validated @NotNull @RequestBody final CreateDiscordInviteRequest request) {
+        // TODO responseクラスを作る
         final var dto = InviteDto.fromRequest(request, zoneId);
         inviteService.createInvite(dto);
     }

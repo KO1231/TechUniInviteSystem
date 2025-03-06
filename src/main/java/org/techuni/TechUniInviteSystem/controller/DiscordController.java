@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordUsingInviteAddtionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
-import org.techuni.TechUniInviteSystem.service.DiscordAPIService;
 import org.techuni.TechUniInviteSystem.service.InviteService;
 
 @Controller
@@ -21,7 +21,6 @@ import org.techuni.TechUniInviteSystem.service.InviteService;
 @AllArgsConstructor
 public class DiscordController {
 
-    private final DiscordAPIService discordAPIService;
     private final InviteService inviteService;
 
     @GetMapping("/authenticated")
@@ -43,7 +42,7 @@ public class DiscordController {
         }
         final var inviteDto = _inviteDto.get();
 
-        return discordAPIService.joinGuild(code, inviteDto).intoView();
+        return inviteService.useInvite(inviteDto, new DiscordUsingInviteAddtionalData(code)).intoView();
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {

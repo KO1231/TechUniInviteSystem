@@ -8,10 +8,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteAcceptResponse;
+import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractUseInviteResponse;
 import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractUsingInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordUsingInviteAddtionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.service.invite.DiscordInviteService;
 
@@ -66,12 +69,16 @@ public class InviteService {
 
     }
 
-    public void useInvite(final InviteDto inviteDto) {
-        inviteRepository.useInvite(inviteDto.intoModel().getDbId());
-    }
+    @Transactional
+    public AbstractUseInviteResponse useInvite(final InviteDto inviteDto, final AbstractUsingInviteAdditionalData usingAdditionalData) {
+        inviteRepository.useInvite(inviteDto.getDbId());
 
-    public void revertUseInvite(final InviteDto inviteDto) {
-        inviteRepository.revertUseInvite(inviteDto.intoModel().getDbId());
+        final var targetApplication = inviteDto.getTargetApplication();
+        if (targetApplication.equals(TargetApplication.DISCORD)) {
+            return discordInviteService.useInvite(inviteDto, (DiscordUsingInviteAddtionalData) usingAdditionalData);
+        }
+
+        throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
     }
 
 }
