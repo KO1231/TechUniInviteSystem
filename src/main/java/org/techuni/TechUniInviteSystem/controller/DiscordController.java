@@ -43,7 +43,7 @@ public class DiscordController {
         }
         final var inviteDto = _inviteDto.get();
 
-        return discordAPIService.joinGuild(code, inviteDto);
+        return discordAPIService.joinGuild(code, inviteDto).intoView();
     }
 
     public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {

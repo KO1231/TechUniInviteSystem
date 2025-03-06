@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.techuni.TechUniInviteSystem.config.DiscordConfig;
-import org.techuni.TechUniInviteSystem.controller.view.invite.DiscordJoinSuccessView;
+import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordJoinSuccessResponse;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
@@ -35,7 +35,7 @@ public class DiscordAPIService {
     private final DiscordDMService discordDMService;
     private final ZoneId zoneId;
 
-    public DiscordJoinSuccessView joinGuild(final String code, final InviteDto inviteDto) {
+    public DiscordJoinSuccessResponse joinGuild(final String code, final InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         if (!invite.isEnable(zoneId)) {
             throw ErrorCode.INVITATION_INVALID.exception(code);
@@ -83,7 +83,7 @@ public class DiscordAPIService {
             log.error("Some error occurred while scheduling DM to user. (JoinServerDM)", e);
         }
 
-        return new DiscordJoinSuccessView(guildIdStr);
+        return new DiscordJoinSuccessResponse(guildId);
     }
 
     public void scheduleJoinGuildDM(long userId, IDiscordMessageVariables variables) {

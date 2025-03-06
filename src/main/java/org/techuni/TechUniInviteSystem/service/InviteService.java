@@ -1,10 +1,13 @@
 package org.techuni.TechUniInviteSystem.service;
 
+import static java.util.Objects.isNull;
+
 import java.time.ZoneId;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteAcceptResponse;
 import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
@@ -36,11 +39,15 @@ public class InviteService {
         }
 
         final var targetApplication = inviteDto.getTargetApplication();
+        AbstractInviteAcceptResponse<?> response = null;
         if (targetApplication.equals(TargetApplication.DISCORD)) {
-            return discordInviteService.acceptInvite(inviteDto);
+            response = discordInviteService.acceptInvite(inviteDto);
         }
 
-        throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
+        if (isNull(response)) {
+            throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
+        }
+        return response.intoView();
     }
 
     @Transactional

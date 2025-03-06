@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techuni.TechUniInviteSystem.config.DiscordConfig;
-import org.techuni.TechUniInviteSystem.controller.view.invite.DiscordAuthRequestView;
+import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordAuthRequestResponse;
 import org.techuni.TechUniInviteSystem.db.repository.DiscordInviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
@@ -40,14 +40,14 @@ public class DiscordInviteService extends AbstractInviteService {
 
     @Override
     @Transactional
-    public DiscordAuthRequestView acceptInvite(InviteDto inviteDto) {
+    public DiscordAuthRequestResponse acceptInvite(InviteDto inviteDto) {
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         final var state = RandomStringUtils.secureStrong() //
                 .nextAlphanumeric(STATE_LENGTH);
 
         discordInviteRepository.addInviteState(invite.getDbId(), state);
 
-        return new DiscordAuthRequestView(clientId, authenticatedEndpoint, state);
+        return new DiscordAuthRequestResponse(clientId, authenticatedEndpoint, state);
     }
 
     @Override
