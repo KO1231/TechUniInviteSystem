@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
+import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.security.UserAuthority;
 import org.techuni.TechUniInviteSystem.service.InviteService;
@@ -28,7 +28,7 @@ public class InviteAcceptController {
 
     // TODO エラーをruntimeにしている
     @GetMapping("/{inviteCode}")
-    public IInviteAcceptResponse acceptInvite( //
+    public IInviteAcceptView acceptInvite( //
             @Valid @NotBlank @PathVariable("inviteCode") String inviteCode) {
         try {
             UUID.fromString(inviteCode);

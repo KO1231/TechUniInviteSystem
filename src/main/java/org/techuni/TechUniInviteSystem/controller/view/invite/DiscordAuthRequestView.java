@@ -1,4 +1,4 @@
-package org.techuni.TechUniInviteSystem.controller.response.invite;
+package org.techuni.TechUniInviteSystem.controller.view.invite;
 
 import discord4j.oauth2.Scope;
 import java.net.URI;
@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EqualsAndHashCode(callSuper = false)
 @Value
 @AllArgsConstructor
-public class DiscordAuthRequestResponse extends RedirectView implements IInviteAcceptResponse {
+public class DiscordAuthRequestView extends RedirectView implements IInviteAcceptView {
 
     private final static String ENDPOINT_OAUTH = "https://discord.com/api/oauth2/authorize";
     private final static List<Scope> SCOPE = List.of(Scope.IDENTIFY, Scope.GUILDS, Scope.GUILDS_JOIN);
@@ -26,7 +26,7 @@ public class DiscordAuthRequestResponse extends RedirectView implements IInviteA
             .queryParam("scope", String.join("+", SCOPE.stream().map(Scope::getValue).toList())) //
             .queryParam("state", "{STATE}");
 
-    public DiscordAuthRequestResponse(final String clientID, final String redirectURI, final String state) {
+    public DiscordAuthRequestView(final String clientID, final String redirectURI, final String state) {
         super(authRequestBuilder.build(getVariableMap(clientID, redirectURI, state)).toString());
     }
 

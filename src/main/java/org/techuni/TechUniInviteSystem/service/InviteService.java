@@ -5,7 +5,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
+import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
@@ -29,7 +29,7 @@ public class InviteService {
     }
 
     @Transactional
-    public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
+    public IInviteAcceptView acceptInvite(final InviteDto inviteDto) {
         final var model = inviteDto.intoModel();
         if (!model.isEnable(zoneId)) {
             throw ErrorCode.INVITATION_INVALID.exception(model.getInvitationCode().toString());
