@@ -2,8 +2,8 @@ package org.techuni.TechUniInviteSystem.controller.view.invite;
 
 import discord4j.oauth2.Scope;
 import java.net.URI;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class DiscordAuthRequestView extends RedirectView implements IInviteAcceptView {
 
     private final static String ENDPOINT_OAUTH = "https://discord.com/api/oauth2/authorize";
-    private final static List<Scope> SCOPE = List.of(Scope.IDENTIFY, Scope.GUILDS, Scope.GUILDS_JOIN);
+    private final static EnumSet<Scope> SCOPE = EnumSet.of(Scope.IDENTIFY, Scope.GUILDS, Scope.GUILDS_JOIN);
     private final static UriBuilder authRequestBuilder = UriComponentsBuilder.fromUriString(ENDPOINT_OAUTH) //
             .queryParam("client_id", "{CLIENT_ID}") //
             .queryParam("response_type", "code") //
