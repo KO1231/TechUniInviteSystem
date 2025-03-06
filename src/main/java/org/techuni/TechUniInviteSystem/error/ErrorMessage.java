@@ -44,6 +44,7 @@ public enum ErrorMessage {
     INTERNAL_DISCORD_LOGIN_DENIED("User denied to login to Discord."), //
     DISCORD_LOGIN_DENIED("You denied to login to Discord. If you think this is a mistake, please try again."), //
     INTERNAL_DISCORD_GUILD_ACCESS_ERROR("Failed to access to the guild. (GuildId: %s)"), //
+    INTERNAL_LACK_GUILD_PERMISSION("Lack of guild permission. (Permission: %s, GuildId: %s)"), //
     ;
 
     private final String message;

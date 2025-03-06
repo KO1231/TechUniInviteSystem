@@ -55,6 +55,8 @@ public enum ErrorCode {
             ErrorMessage.INTERNAL_DISCORD_GUILD_ACCESS_ERROR), //
     DISCORD_GUILD_ACCESS_ERROR(ErrorSource.INVITATION, 111, HttpStatus.NOT_FOUND, ErrorMessage.INTERNAL_DISCORD_GUILD_ACCESS_ERROR,
             ErrorMessage.INVITATION_INVALID), //
+    DISCORD_LACK_GUILD_PERMISSION(ErrorSource.INVITATION, 112, HttpStatus.NOT_FOUND, ErrorMessage.INTERNAL_LACK_GUILD_PERMISSION,
+            ErrorMessage.INVITATION_INVALID), //
 
     /**
      * VALIDATION

@@ -1,6 +1,13 @@
 package org.techuni.TechUniInviteSystem.service;
 
+import discord4j.common.util.Snowflake;
 import discord4j.discordjson.json.MemberData;
+import discord4j.rest.RestClient;
+import discord4j.rest.util.Permission;
+import discord4j.rest.util.PermissionSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,6 +19,8 @@ import org.techuni.TechUniInviteSystem.external.discord.DiscordAPI;
 @Slf4j
 @AllArgsConstructor
 public class DiscordAPIService {
+
+    private final RestClient restClient;
 
     public MemberData joinGuild(final DiscordAPI api, final DiscordInviteModel invite) {
         final var discordInvite = invite.getAdditionalData();
@@ -25,5 +34,27 @@ public class DiscordAPIService {
         }
 
         return api.joinGuild(guildId, discordInvite.getNickname());
+    }
+
+    public boolean checkBotHasPermission(final long guildId, final Set<Permission> permissions) {
+        final var guild = restClient.getGuildById(Snowflake.of(guildId));
+        final var hasRoles = Optional.ofNullable(guild.getSelfMember().block()) //
+                .map(MemberData::roles) //
+                .orElseThrow(() -> ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId)));
+
+        // hasRolesがemptyのとき、必ずあるはずのBOT権限も取得できていない -> ロール管理権限がない。
+        // ロール管理権限がないときは、ロールによるエラーハンドリングを諦めて招待実行時エラーによるハンドリングで運用する。(最小権限のみを必要とするという非機能要件による)
+        if (hasRoles.isEmpty()) {
+            return true;
+        }
+
+        final var hasPermissions = guild.getRoles() //
+                .filter(r -> hasRoles.contains(r.id())) //
+                .map(r -> PermissionSet.of(r.permissions())) //
+                .toStream() //
+                .flatMap(PermissionSet::stream) //
+                .collect(Collectors.toSet());
+
+        return hasPermissions.containsAll(permissions);
     }
 }

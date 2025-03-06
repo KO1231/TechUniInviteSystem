@@ -1,10 +1,8 @@
 package org.techuni.TechUniInviteSystem.service.invite;
 
-import static java.util.Objects.isNull;
-
-import discord4j.common.util.Snowflake;
 import discord4j.rest.RestClient;
 import discord4j.rest.http.client.ClientException;
+import discord4j.rest.util.Permission;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -27,6 +25,7 @@ import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
 import org.techuni.TechUniInviteSystem.domain.invite.models.DiscordInviteModel;
 import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordUsingInviteAddtionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
+import org.techuni.TechUniInviteSystem.error.MyHttpException;
 import org.techuni.TechUniInviteSystem.external.discord.DiscordAPIFactory;
 import org.techuni.TechUniInviteSystem.external.discord.template.variables.JoinServerDMVariable;
 import org.techuni.TechUniInviteSystem.service.DiscordAPIService;
@@ -61,10 +60,12 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
         final var guildId = Long.parseLong(additionalData.getGuildID());
 
         try {
-            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
-                throw ErrorCode.DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            final var neededPermissions = model.calcNeededPermissions();
+            if (!apiService.checkBotHasPermission(guildId, neededPermissions)) {
+                throw ErrorCode.DISCORD_LACK_GUILD_PERMISSION.exception( //
+                        String.join(" & ", neededPermissions.stream().map(Permission::name).toList()), String.valueOf(guildId));
             }
-        } catch (ClientException e) {
+        } catch (ClientException | MyHttpException e) {
             throw ErrorCode.DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR.exception(e, String.valueOf(guildId));
         }
 
@@ -79,8 +80,10 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
         final var invite = inviteDto.intoModel(DiscordInviteModel.class);
         final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
         try {
-            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
-                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            final var neededPermissions = invite.calcNeededPermissions();
+            if (!apiService.checkBotHasPermission(guildId, neededPermissions)) {
+                throw ErrorCode.DISCORD_LACK_GUILD_PERMISSION.exception( //
+                        String.join(" & ", neededPermissions.stream().map(Permission::name).toList()), String.valueOf(guildId));
             }
         } catch (ClientException e) {
             throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
@@ -104,8 +107,10 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
         final var guildId = Long.parseLong(invite.getAdditionalData().getGuildID());
         try {
-            if (isNull(restClient.getSelfMember(Snowflake.of(guildId)).block())) {
-                throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
+            final var neededPermissions = invite.calcNeededPermissions();
+            if (!apiService.checkBotHasPermission(guildId, neededPermissions)) {
+                throw ErrorCode.DISCORD_LACK_GUILD_PERMISSION.exception( //
+                        String.join(" & ", neededPermissions.stream().map(Permission::name).toList()), String.valueOf(guildId));
             }
         } catch (ClientException e) {
             throw ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId));
