@@ -1,5 +1,6 @@
 package org.techuni.TechUniInviteSystem.type;
 
+import java.time.ZoneId;
 import lombok.NoArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
@@ -21,6 +22,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @UnitTest
 @NoArgsConstructor
 public abstract class AbstractUnitTest {
+
+    protected ZoneId zoneId = ZoneId.of("Asia/Tokyo");
 
     @BeforeAll
     protected void beforeAll() {
