@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * Test用 PasswordEncoder PasswordEncoderがセキュリティ面でrounds数を上げた影響でテストの時間が長くなってしまうため
+ * Test用 PasswordEncoder rounds数を下げてテスト時間を短くする
  */
 @Profile("test")
 @Component
@@ -15,6 +15,6 @@ public class TestPasswordEncoder {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
+        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 4);
     }
 }
