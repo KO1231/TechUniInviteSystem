@@ -11,7 +11,8 @@ public enum ErrorCode {
     /**
      * OTHER
      */
-    UNEXPECTED_ERROR(ErrorSource.OTHER, 1, HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.INTERNAL_UNEXPECTED_ERROR, ErrorMessage.UNEXPECTED_ERROR), //
+    UNEXPECTED_ERROR(ErrorSource.OTHER, 1, HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.INTERNAL_UNEXPECTED_ERROR,
+            ErrorMessage.UNEXPECTED_ERROR), //
 
     /**
      * LOGIN
@@ -30,7 +31,8 @@ public enum ErrorCode {
             ErrorMessage.INVITATION_INVALID), //
     INVITATION_INVALID(ErrorSource.INVITATION, 3, HttpStatus.NOT_FOUND, ErrorMessage.INTERNAL_INVITATION_INVALID, ErrorMessage.INVITATION_INVALID), //
     INVITATION_CODE_VALIDATION_ERROR(ErrorSource.INVITATION, 4, HttpStatus.NOT_FOUND, null, ErrorMessage.INVITATION_INVALID), //
-    INVITATION_CREATE_REGISTERED_INVITE(ErrorSource.INVITATION, 5, HttpStatus.BAD_REQUEST, ErrorMessage.INTERNAL_INVITATION_CREATE_REGISTERED_INVITE), //
+    INVITATION_CREATE_REGISTERED_INVITE(ErrorSource.INVITATION, 5, HttpStatus.BAD_REQUEST), //
+    INVITATION_CREATE_INVALID_INVITE(ErrorSource.INVITATION, 6, HttpStatus.BAD_REQUEST), //
 
     /* DISCORD INVITATION */
     DISCORD_INVITATION_ALREADY_JOINED(ErrorSource.INVITATION, 101, HttpStatus.CONFLICT, ErrorMessage.INTERNAL_DISCORD_ALREADY_JOINED,
@@ -49,7 +51,8 @@ public enum ErrorCode {
             ErrorMessage.DISCORD_LOGIN_DENIED), //
     DISCORD_AUTHENTICATED_VALIDATION_ERROR(ErrorSource.INVITATION, 108, HttpStatus.UNAUTHORIZED, null, ErrorMessage.DISCORD_LOGIN_FAILED), //
     DISCORD_CREATE_JOIN_DM_ERROR(ErrorSource.INVITATION, 109, HttpStatus.INTERNAL_SERVER_ERROR, null, ErrorMessage.DISCORD_UNEXPECTED_ERROR), //
-    DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR(ErrorSource.INVITATION, 110, HttpStatus.BAD_REQUEST, ErrorMessage.INTERNAL_DISCORD_GUILD_ACCESS_ERROR), //
+    DISCORD_CREATE_INVITE_GUILD_ACCESS_ERROR(ErrorSource.INVITATION, 110, HttpStatus.BAD_REQUEST,
+            ErrorMessage.INTERNAL_DISCORD_GUILD_ACCESS_ERROR), //
     DISCORD_GUILD_ACCESS_ERROR(ErrorSource.INVITATION, 111, HttpStatus.NOT_FOUND, ErrorMessage.INTERNAL_DISCORD_GUILD_ACCESS_ERROR,
             ErrorMessage.INVITATION_INVALID), //
     DISCORD_LACK_GUILD_PERMISSION(ErrorSource.INVITATION, 112, HttpStatus.NOT_FOUND, ErrorMessage.INTERNAL_LACK_GUILD_PERMISSION,
@@ -120,8 +123,8 @@ public enum ErrorCode {
     }
 
     public String getInternalMessage(String... args) {
-        final var output =
-                Optional.ofNullable(internalMessage).map(ErrorMessage::getMessage).orElse(status.getReasonPhrase()).formatted((Object[]) args);
+        final var output = Optional.ofNullable(internalMessage).map(ErrorMessage::getMessage).orElse(status.getReasonPhrase())
+                .formatted((Object[]) args);
         return "\"%s\" - ErrorCode.%s".formatted(output, this.name());
     }
 

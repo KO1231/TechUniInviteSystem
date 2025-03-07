@@ -33,7 +33,9 @@ public abstract class AbstractInviteModel<ADDITIONAL extends AbstractInviteAddit
     }
 
     public boolean isEnable(ZonedDateTime time) {
-        return !isDisabled && !isUsed() && Optional.ofNullable(expiresAt).map(time::isAfter).orElse(true);
+        return !isDisabled && //
+                !isUsed() && //
+                Optional.ofNullable(expiresAt).map(expire -> time.isBefore(expire)).orElse(true);
     }
 
     public boolean isEnable(ZoneId zoneId) {
