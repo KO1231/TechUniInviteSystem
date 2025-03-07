@@ -47,7 +47,7 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
     private String clientId;
     private String authenticatedEndpoint;
-    private TemporalAmount stateExpireTime;
+    private Optional<TemporalAmount> stateExpireTime;
 
     @Override
     @Transactional
@@ -148,7 +148,7 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
     // 5分ごとにstateテーブルをclean
     @Scheduled(fixedRate = 5L, timeUnit = TimeUnit.MINUTES)
     public void cleanState() {
-        discordInviteRepository.cleanState(stateExpireTime);
+        stateExpireTime.ifPresent(discordInviteRepository::cleanState);
     }
 
     @Autowired
@@ -163,6 +163,13 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
     @Autowired
     public void setStateExpireTime(final DiscordConfig config) {
-        this.stateExpireTime = Duration.of(config.getStateExpirationSeconds(), ChronoUnit.SECONDS);
+        final var seconds = config.getStateExpirationSeconds();
+        if (seconds < 0) {
+            throw new IllegalArgumentException("Invalid state expiration seconds. (%d)".formatted(seconds));
+        }
+
+        this.stateExpireTime = Optional.of(seconds) //
+                .filter(s -> (s == 0)) //
+                .map(s -> Duration.of(s, ChronoUnit.SECONDS));
     }
 }
