@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://IP:PORT/SCHEMA"
+    username: "USERNAME"
+    password: "PASSWORD"
+
+jwt:
+  expiration: 0
+
+techuni:
+  discord:
+    token: "DISCORD_BOT_TOKEN"
+    client-id: "1234567890123456789"
+    client-secret: "DISCORD-BOT-SECRET"
+    endpoint:
+      authenticated: "http://localhost:8080/discord/authenticated"
+    state:
+      expirationSeconds: 0
+    file:
+      join-server-dm:
+        path: ""
