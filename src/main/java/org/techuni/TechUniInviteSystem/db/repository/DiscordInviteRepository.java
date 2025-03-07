@@ -1,5 +1,6 @@
 package org.techuni.TechUniInviteSystem.db.repository;
 
+import jakarta.annotation.PreDestroy;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAmount;
@@ -37,6 +38,11 @@ public class DiscordInviteRepository {
     public void cleanState(TemporalAmount stateExpireTime) {
         inviteWithDiscordStateMapper.cleanState(LocalDateTime.now(ZONE),
                 Optional.ofNullable(stateExpireTime).map(LocalDateTime.now(ZONE)::minus).orElse(null));
+    }
+
+    @PreDestroy
+    public void deleteAllStateWhenShutdown() {
+        inviteWithDiscordStateMapper.cleanAllState();
     }
 
     public void addJoinedUser(final int inviteId, final long userId) {

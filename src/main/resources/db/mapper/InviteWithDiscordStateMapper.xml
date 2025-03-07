@@ -34,4 +34,8 @@
 
     </delete>
 
+    <delete id="cleanAllState">
+        TRUNCATE TABLE invite_discord_state;
+    </delete>
+
 </mapper>
