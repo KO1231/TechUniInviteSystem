@@ -2,6 +2,7 @@ package org.techuni.TechUniInviteSystem.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
@@ -13,8 +14,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordAuthRequestResponse;
+import org.techuni.TechUniInviteSystem.controller.response.invite.DiscordJoinSuccessResponse;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordUsingInviteAddtionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.error.MyHttpException;
 import org.techuni.TechUniInviteSystem.sample.InviteSample;
@@ -68,6 +71,22 @@ public class InviteServiceTest extends AbstractUnitTest {
         /* execute */
         assertThat(inviteService.acceptInvite(inviteDto)) //
                 .isEqualTo(response.intoView());
+    }
+
+    @Test
+    void 正_招待できる() {
+        /* input setup */
+        final var resultDto = InviteSample.builder().dbId(1).build().intoDto();
+        final var usingAdditionalData = new DiscordUsingInviteAddtionalData("sampleAPIAuthenticatedCode");
+        final var response = new DiscordJoinSuccessResponse(1234567890123456789L);
+
+        /* mock */
+        doNothing().when(inviteRepository).useInvite(resultDto.getDbId());
+        when(discordInviteService.useInvite(resultDto, usingAdditionalData)).thenReturn(response);
+
+        /* execute */
+        assertThat(inviteService.useInvite(resultDto, usingAdditionalData)) //
+                .isEqualTo(response);
     }
 
     @Test
