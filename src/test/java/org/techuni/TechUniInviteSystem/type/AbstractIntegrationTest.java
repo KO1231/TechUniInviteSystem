@@ -30,7 +30,7 @@ import org.techuni.TechUniInviteSystem.db.entity.User;
 import org.techuni.TechUniInviteSystem.db.repository.UserRepository;
 import org.techuni.TechUniInviteSystem.domain.user.UserDto;
 import org.techuni.TechUniInviteSystem.domain.user.UserModel;
-import org.techuni.TechUniInviteSystem.security.MyPasswordEncoder;
+import org.techuni.TechUniInviteSystem.security.TestPasswordEncoder;
 import org.techuni.TechUniInviteSystem.security.UserAuthority;
 import org.techuni.TechUniInviteSystem.util.AuthTokenUtil;
 import org.techuni.TechUniInviteSystem.util.GsonUtil;
@@ -54,7 +54,7 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private MyPasswordEncoder passwordEncoder;
+    private TestPasswordEncoder passwordEncoder;
     @Autowired
     private TestUserRepository testUserRepository;
 
