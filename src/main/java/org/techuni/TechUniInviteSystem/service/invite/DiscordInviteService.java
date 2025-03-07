@@ -1,6 +1,5 @@
 package org.techuni.TechUniInviteSystem.service.invite;
 
-import discord4j.rest.RestClient;
 import discord4j.rest.http.client.ClientException;
 import discord4j.rest.util.Permission;
 import java.time.Duration;
@@ -38,7 +37,6 @@ public class DiscordInviteService extends AbstractInviteService<DiscordUsingInvi
 
     private final static int STATE_LENGTH = 255;
 
-    private final RestClient restClient;
     private final ZoneId zoneId;
     private final DiscordDMService discordDMService;
     private final DiscordAPIService apiService;
