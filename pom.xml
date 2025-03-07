@@ -13,6 +13,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>TechUni Invite System</name>
     <description>TechUni Invitation System.</description>
+    <organization>
+        <name>IT Student Org, Tech.Uni</name>
+        <url>https://techuni.org</url>
+    </organization>
     <url>https://invite.techuni.org</url>
     <developers>
         <developer>
