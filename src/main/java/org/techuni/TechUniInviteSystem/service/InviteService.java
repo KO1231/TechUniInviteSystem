@@ -37,8 +37,12 @@ public class InviteService {
     @Transactional
     public void createInvite(final InviteDto inviteDto) {
         final var model = inviteDto.intoModel();
-        if (model.isDBRegistered() || model.isUsed()) {
-            throw ErrorCode.INVITATION_CREATE_REGISTERED_INVITE.exception(model.getInvitationCode().toString());
+        if (model.isDBRegistered() || model.getUsed() > 0) {
+            throw ErrorCode.INVITATION_CREATE_REGISTERED_INVITE.exception();
+        }
+
+        if (!model.isEnable(zoneId)) {
+            throw ErrorCode.INVITATION_CREATE_INVALID_INVITE.exception();
         }
 
         final var createdDto = inviteRepository.createInvite(inviteDto);
