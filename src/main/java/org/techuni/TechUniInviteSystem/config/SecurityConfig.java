@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.controller.DiscordController;
 import org.techuni.TechUniInviteSystem.controller.InviteAcceptController;
+import org.techuni.TechUniInviteSystem.controller.InviteController;
+import org.techuni.TechUniInviteSystem.controller.LoginController;
 import org.techuni.TechUniInviteSystem.security.JwtAuthenticationFilter;
 import org.techuni.TechUniInviteSystem.service.MyUserDetailsService;
 
@@ -42,6 +45,9 @@ public class SecurityConfig {
                 // CORSの設定を適用
                 // .cors(customizer -> customizer.configurationSource(corsConfigurationSource())) //
 
+                // CSRF保護を無効
+                .csrf(CsrfConfigurer::disable) //
+
                 .headers(header -> header //
                         .frameOptions(FrameOptionsConfig::deny) //
                         .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self';"))) //
@@ -54,14 +60,14 @@ public class SecurityConfig {
                             .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                             // public dirは全許可
                             .requestMatchers("/public/**").permitAll()
-                            // ログインページは全許可
-                            .requestMatchers("/login").permitAll()
                             // その他publicファイルを指定 (全許可)
                             .requestMatchers("/robots.txt").permitAll();
 
                     // 個別ページの権限設定 (基本check関数で処理)
+                    authorizeRequests.requestMatchers("/login").access(LoginController::check);
                     authorizeRequests.requestMatchers("/accept/*").access(InviteAcceptController::check);
                     authorizeRequests.requestMatchers("/discord/*").access(DiscordController::check);
+                    authorizeRequests.requestMatchers("/invite").access(InviteController::check);
 
 
                     /* Config依存ページ */

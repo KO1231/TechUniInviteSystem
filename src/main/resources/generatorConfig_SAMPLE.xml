@@ -30,6 +30,7 @@
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
+            <property name="useJSR310Types" value="true"/>
         </javaTypeResolver>
 
         <!--  Entityの生成場所 -->
@@ -51,7 +52,13 @@
         />
 
         <!--  生成対象のテーブル -->
-        <table tableName="user" />
-        <table tableName="user_authority" />
+        <table tableName="target_app" />
+        <table tableName="invite">
+            <ignoreColumn column="is_used"/>
+        </table>
+        <table tableName="invite_discord" />
+        <table tableName="invite_discord_joined_user" />
+        <table tableName="invite_discord_state" />
+
     </context>
 </generatorConfiguration>

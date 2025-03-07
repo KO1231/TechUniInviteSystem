@@ -6,10 +6,12 @@ import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscord;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordJoinedUser;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordState;
 import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordJoinedUserMapper;
+import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordStateMapper;
 
 @Repository
@@ -20,6 +22,7 @@ public class DiscordInviteRepository {
     private final InviteDiscordStateMapper inviteDiscordStateMapper;
     private final InviteDiscordJoinedUserMapper inviteDiscordJoinedUserMapper;
     private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
+    private final InviteDiscordMapper inviteDiscordMapper;
 
     public void addInviteState(final int inviteId, final String stateString) {
         final var state = new InviteDiscordState();
@@ -44,6 +47,16 @@ public class DiscordInviteRepository {
         joinedUser.setJoinedAt(LocalDateTime.now(ZONE));
 
         inviteDiscordJoinedUserMapper.insert(joinedUser);
+    }
+
+    public void createInvite(final int inviteId, long guild_id, String nickname) {
+        final var data = new InviteDiscord();
+
+        data.setInviteId(inviteId);
+        data.setGuildId(guild_id);
+        data.setNickname(nickname);
+
+        inviteDiscordMapper.insert(data);
     }
 
 }

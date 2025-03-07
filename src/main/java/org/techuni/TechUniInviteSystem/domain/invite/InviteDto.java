@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.techuni.TechUniInviteSystem.controller.request.invite.AbstractCreateInviteRequest;
 import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteResponse;
 import org.techuni.TechUniInviteSystem.db.entity.base.Invite;
 import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
@@ -42,6 +43,14 @@ public class InviteDto {
                 TargetApplication.getById(invite.getTargetAppId()), expiresAt.orElse(null), additionalData);
     }
 
+    public static InviteDto fromRequest(final AbstractCreateInviteRequest request, final ZoneId zone) {
+        final var inviteRequest = request.getInvite();
+        final var expiresAt = Optional.ofNullable(inviteRequest.getExpirationDate()).map(t -> t.withZoneSameInstant(zone));
+
+        return new InviteDto(-1, UUID.randomUUID().toString(), inviteRequest.getSearchId(), false, 0, inviteRequest.getMaxUsed(),
+                inviteRequest.getTargetApp(), expiresAt.orElse(null), request.generateAdditionalData());
+    }
+
     public <T extends AbstractInviteAdditionalData> AbstractInviteModel<T> intoModel() {
         final var modelClass = targetApplication.getModelClass();
         final Method ofMethod;
@@ -64,6 +73,23 @@ public class InviteDto {
         }
     }
 
+    public Invite intoDB() {
+        final var invite = new Invite();
+
+        if (dbId > 0) {
+            invite.setId(dbId);
+        }
+        invite.setCode(invitationCode.toString());
+        invite.setSearchId(searchId);
+        invite.setIsDisabled(isDisabled);
+        invite.setUsed(used);
+        invite.setMaxUsed(maxUsed);
+        invite.setTargetAppId(targetApplication.getId());
+        invite.setExpiresAt(expiresAt.toLocalDateTime());
+
+        return invite;
+    }
+
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
@@ -74,7 +100,7 @@ public class InviteDto {
         return modelClass.cast(intoModel());
     }
 
-    public <R extends AbstractInviteResponse> R intoResponse(final Class<R> responseClazz) {
+    public <R extends AbstractInviteResponse<?>> R intoResponse(final Class<R> responseClazz) {
         final Method ofMethod;
         try {
             ofMethod = findMethod(responseClazz, true, "of", int.class, UUID.class, String.class, boolean.class, int.class, int.class,
@@ -83,9 +109,9 @@ public class InviteDto {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e, "Cannot find of method in response class. (Class: %s)".formatted(responseClazz.getName()));
         }
 
-        final AbstractInviteResponse response;
+        final AbstractInviteResponse<?> response;
         try {
-            response = (AbstractInviteResponse) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed, targetApplication,
+            response = (AbstractInviteResponse<?>) ofMethod.invoke(null, dbId, invitationCode, searchId, isDisabled, used, maxUsed, targetApplication,
                     expiresAt, data);
         } catch (InvocationTargetException | IllegalAccessException | ClassCastException e) {
             throw ErrorCode.UNEXPECTED_ERROR.exception(e,

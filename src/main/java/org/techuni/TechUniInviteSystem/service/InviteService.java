@@ -1,13 +1,20 @@
 package org.techuni.TechUniInviteSystem.service;
 
+import static java.util.Objects.isNull;
+
 import java.time.ZoneId;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.techuni.TechUniInviteSystem.controller.response.invite.IInviteAcceptResponse;
+import org.springframework.transaction.annotation.Transactional;
+import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractInviteAcceptResponse;
+import org.techuni.TechUniInviteSystem.controller.response.invite.AbstractUseInviteResponse;
+import org.techuni.TechUniInviteSystem.controller.view.invite.IInviteAcceptView;
 import org.techuni.TechUniInviteSystem.db.repository.InviteRepository;
 import org.techuni.TechUniInviteSystem.domain.invite.InviteDto;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractUsingInviteAdditionalData;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordUsingInviteAddtionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 import org.techuni.TechUniInviteSystem.service.invite.DiscordInviteService;
 
@@ -27,27 +34,51 @@ public class InviteService {
         return Optional.ofNullable(inviteRepository.getInviteByState(state));
     }
 
-    public IInviteAcceptResponse acceptInvite(final InviteDto inviteDto) {
+    @Transactional
+    public void createInvite(final InviteDto inviteDto) {
+        final var model = inviteDto.intoModel();
+        if (model.isDBRegistered() || model.isUsed()) {
+            throw ErrorCode.INVITATION_CREATE_REGISTERED_INVITE.exception(model.getInvitationCode().toString());
+        }
+
+        final var createdDto = inviteRepository.createInvite(inviteDto);
+
+        final var targetApplication = createdDto.getTargetApplication();
+        if (targetApplication.equals(TargetApplication.DISCORD)) {
+            discordInviteService.createInvite(createdDto);
+        }
+
+    }
+
+    @Transactional
+    public IInviteAcceptView acceptInvite(final InviteDto inviteDto) {
         final var model = inviteDto.intoModel();
         if (!model.isEnable(zoneId)) {
             throw ErrorCode.INVITATION_INVALID.exception(model.getInvitationCode().toString());
         }
 
         final var targetApplication = inviteDto.getTargetApplication();
-
+        AbstractInviteAcceptResponse<?> response = null;
         if (targetApplication.equals(TargetApplication.DISCORD)) {
-            return discordInviteService.acceptInvite(inviteDto);
+            response = discordInviteService.acceptInvite(inviteDto);
+        }
+
+        if (isNull(response)) {
+            throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
+        }
+        return response.intoView();
+    }
+
+    @Transactional
+    public AbstractUseInviteResponse useInvite(final InviteDto inviteDto, final AbstractUsingInviteAdditionalData usingAdditionalData) {
+        inviteRepository.useInvite(inviteDto.getDbId());
+
+        final var targetApplication = inviteDto.getTargetApplication();
+        if (targetApplication.equals(TargetApplication.DISCORD)) {
+            return discordInviteService.useInvite(inviteDto, (DiscordUsingInviteAddtionalData) usingAdditionalData);
         }
 
         throw ErrorCode.UNEXPECTED_ERROR.exception("Unsupported target application. (%s)".formatted(targetApplication));
-    }
-
-    public void useInvite(final InviteDto inviteDto) {
-        inviteRepository.useInvite(inviteDto.intoModel().getDbId());
-    }
-
-    public void revertUseInvite(final InviteDto inviteDto) {
-        inviteRepository.revertUseInvite(inviteDto.intoModel().getDbId());
     }
 
 }

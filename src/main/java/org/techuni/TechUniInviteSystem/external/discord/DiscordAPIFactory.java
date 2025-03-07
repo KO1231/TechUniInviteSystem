@@ -1,9 +1,14 @@
 package org.techuni.TechUniInviteSystem.external.discord;
 
+import static java.util.Objects.isNull;
+
+import discord4j.common.util.Snowflake;
 import discord4j.discordjson.json.AuthorizationCodeGrantRequest;
 import discord4j.oauth2.DiscordOAuth2Client;
 import discord4j.rest.RestClient;
 import discord4j.rest.http.client.ClientException;
+import discord4j.rest.util.Permission;
+import discord4j.rest.util.PermissionSet;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +46,23 @@ public class DiscordAPIFactory {
             throw ErrorCode.DISCORD_LOGIN_FAILED.exception(e);
         } catch (Exception e) {
             throw ErrorCode.DISCORD_LOGIN_UNEXPECTED_ERROR.exception(e);
+        }
+    }
+
+    public boolean hasInvitePermission(final long guildId) {
+        try {
+            final var member = restClient.getGuildById(Snowflake.of(guildId)) //
+                    .getSelfMember().block();
+            if (isNull(member)) {
+                return false;
+            }
+
+            return member.permissions().toOptional() //
+                    .map(PermissionSet::of) //
+                    .map(p -> p.contains(Permission.CREATE_INSTANT_INVITE)) //
+                    .orElse(false);
+        } catch (Exception e) {
+            return false;
         }
     }
 }

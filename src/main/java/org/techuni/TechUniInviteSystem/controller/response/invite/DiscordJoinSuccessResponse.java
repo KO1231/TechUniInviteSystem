@@ -3,17 +3,17 @@ package org.techuni.TechUniInviteSystem.controller.response.invite;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.springframework.web.servlet.view.RedirectView;
+import org.techuni.TechUniInviteSystem.controller.view.invite.DiscordJoinSuccessView;
 
-@EqualsAndHashCode(callSuper = false)
 @Value
 @AllArgsConstructor
-public class DiscordJoinSuccessResponse extends RedirectView implements IInviteAcceptResponse {
+@EqualsAndHashCode(callSuper = false)
+public class DiscordJoinSuccessResponse extends AbstractUseInviteResponse {
 
-    private final static String CHANNEL_PAGE_TEMPLATE = "https://discord.com/channels/%s";
+    Long guildId;
 
-    public DiscordJoinSuccessResponse(final String guildId) {
-        super(String.format(CHANNEL_PAGE_TEMPLATE, guildId));
+    public DiscordJoinSuccessView intoView() {
+        return new DiscordJoinSuccessView(guildId.toString());
     }
 
 }

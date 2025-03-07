@@ -1,5 +1,6 @@
 package org.techuni.TechUniInviteSystem.service;
 
+import discord4j.discordjson.json.AllowedMentionsData;
 import discord4j.discordjson.json.DMCreateRequest;
 import discord4j.discordjson.json.MessageCreateRequest;
 import discord4j.rest.RestClient;
@@ -16,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.techuni.TechUniInviteSystem.config.DiscordConfig;
+import org.techuni.TechUniInviteSystem.external.discord.template.DiscordTemplateEngine;
+import org.techuni.TechUniInviteSystem.external.discord.template.IDiscordMessageVariables;
 import reactor.util.function.Tuples;
 
 @Service
@@ -23,11 +27,28 @@ import reactor.util.function.Tuples;
 @RequiredArgsConstructor
 public class DiscordDMService {
 
+    private final DiscordConfig config;
+    private final DiscordTemplateEngine templateEngine;
     private final RestClient restClient;
     private final List<CreateDMData> data = Collections.synchronizedList(new ArrayList<>());
 
-    public void scheduleDM(String userId, MessageCreateRequest request, List<DiscordMessageAttachment> attachments) {
-        data.add(new CreateDMData(userId, request, Optional.ofNullable(attachments).orElse(Collections.emptyList())));
+    public void scheduleDM(final long userId, final IDiscordMessageVariables variables) {
+        final var attachments = config.getJoinServerDMAttachment() //
+                .map(resource -> new DiscordMessageAttachment("image.png", resource, config.isForceJoinServerDMAttachment())) //
+                .map(List::of) //
+                .orElse(null); //
+
+        final var message = templateEngine.process(variables);
+
+        final var userIdStr = String.valueOf(userId);
+        final MessageCreateRequest messageRequest = MessageCreateRequest.builder() //
+                .content(message) //
+                .allowedMentions(AllowedMentionsData.builder() //
+                        .addUser(userIdStr) //
+                        .build() //
+                ).build();
+
+        data.add(new CreateDMData(userIdStr, messageRequest, Optional.ofNullable(attachments).orElse(Collections.emptyList())));
     }
 
     @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)

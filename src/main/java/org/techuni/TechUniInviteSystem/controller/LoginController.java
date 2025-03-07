@@ -1,13 +1,19 @@
 package org.techuni.TechUniInviteSystem.controller;
 
+import jakarta.validation.constraints.NotNull;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,14 +35,14 @@ public class LoginController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping
-    public ResponseEntity<LoginSuccessResponse> login(@Validated @RequestBody LoginRequest loginRequest, final BindingResult bindingResult) {
+    public ResponseEntity<LoginSuccessResponse> login(@Validated @NotNull @RequestBody LoginRequest loginRequest, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw ErrorCode.LOGIN_REQUEST_VALIDATION_ERROR.exception();
         }
 
         try {
-            final var authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUser(), loginRequest.getPassword()));
+            final var authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUser(), loginRequest.getPassword()));
 
             final var token = tokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(new LoginSuccessResponse(token));
@@ -51,5 +57,17 @@ public class LoginController {
             log.error("Unexpected error occurred.", e);
             throw ErrorCode.LOGIN_UNEXCEPTED_ERROR.exception(); // 外部にはただのログイン失敗として扱う。
         }
+    }
+
+    public static AuthorizationDecision check(Supplier<Authentication> _authentication, RequestAuthorizationContext object) {
+        final var authentication = _authentication.get();
+        final var method = object.getRequest().getMethod();
+
+        if (method.equals(HttpMethod.POST.name())) {
+            return new AuthorizationDecision(true); // POSTはpermitAll
+        }
+
+        // その他のリクエストはdenyAll
+        return new AuthorizationDecision(false);
     }
 }

@@ -27,6 +27,7 @@ public enum ErrorMessage {
             "This invitation is not available. Please check the code availibility (e.g. expiration date, usage limit). If you think this is a mistake, please contact to the inviter."), //
     INTERNAL_INVITATION_ALREADY_USED("Request Already Used Invitation Code. (Code: %s)"), //
     INTERNAL_INVITATION_INVALID("Request Invalid Invitation Code. (Code: %s)"), //
+    INTERNAL_INVITATION_CREATE_REGISTERED_INVITE("Request Create Registered Invite."), //
 
     /* DISCORD INVITATION */
     INTERNAL_DISCORD_ALREADY_JOINED(
@@ -42,6 +43,8 @@ public enum ErrorMessage {
     INTERNAL_DISCORD_LOAD_USER_INFO_FAILED("Failed to load user info from Discord API."), //
     INTERNAL_DISCORD_LOGIN_DENIED("User denied to login to Discord."), //
     DISCORD_LOGIN_DENIED("You denied to login to Discord. If you think this is a mistake, please try again."), //
+    INTERNAL_DISCORD_GUILD_ACCESS_ERROR("Failed to access to the guild. (GuildId: %s)"), //
+    INTERNAL_LACK_GUILD_PERMISSION("Lack of guild permission. (Permission: %s, GuildId: %s)"), //
     ;
 
     private final String message;

@@ -3,14 +3,16 @@ package org.techuni.TechUniInviteSystem.controller.response.invite;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import org.techuni.TechUniInviteSystem.domain.invite.TargetApplication;
-import org.techuni.TechUniInviteSystem.domain.invite.models.AbstractInviteModel;
 import org.techuni.TechUniInviteSystem.domain.invite.models.additional.AbstractInviteAdditionalData;
 import org.techuni.TechUniInviteSystem.error.ErrorCode;
 
-public abstract class AbstractInviteResponse {
+public abstract class AbstractInviteResponse<ADDITIONAL extends AbstractInviteAdditionalData> {
 
-    public static <ADDITIONAL extends AbstractInviteAdditionalData> AbstractInviteModel<ADDITIONAL> of(int dbId, UUID invitationCode, String searchId,
-            boolean isDisabled, int used, int maxUsed, TargetApplication targetApplication, ZonedDateTime expiresAt, ADDITIONAL data) {
+    public static <ADDITIONAL extends AbstractInviteAdditionalData> AbstractInviteResponse<ADDITIONAL> of(int dbId, UUID invitationCode,
+            String searchId, boolean isDisabled, int used, int maxUsed, TargetApplication targetApplication, ZonedDateTime expiresAt,
+            ADDITIONAL data) {
         throw ErrorCode.UNEXPECTED_ERROR.exception("Not implemented (AbstractInviteResponse::of).");
     }
+
+
 }

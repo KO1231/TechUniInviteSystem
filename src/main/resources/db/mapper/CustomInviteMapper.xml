@@ -9,5 +9,10 @@
         SET invite.used = invite.used + #{amount}
         WHERE invite.id = #{inviteId}
     </update>
+    
+    <insert id="insertInvite" parameterType="org.techuni.TechUniInviteSystem.db.entity.base.Invite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO invite (code, search_id, is_disabled, used, max_used, target_app_id, expires_at)
+        VALUES (#{invite.code}, #{invite.searchId}, #{invite.isDisabled}, #{invite.used}, #{invite.maxUsed}, #{invite.targetAppId}, #{invite.expiresAt, jdbcType=TIMESTAMP})
+    </insert>
 
 </mapper>

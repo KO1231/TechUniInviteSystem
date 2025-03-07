@@ -26,6 +26,13 @@ public class InviteRepository {
     private final InviteDiscordMapper inviteDiscordMapper;
     private final InviteWithDiscordStateMapper inviteWithDiscordStateMapper;
 
+    public InviteDto createInvite(InviteDto inviteDto) {
+        final var invite = inviteDto.intoDB();
+        customInviteMapper.insertInvite(invite);
+
+        return InviteDto.fromDB(invite, ZONE, inviteDto.getData());
+    }
+
     public InviteDto getInviteByCode(String code) {
         final var searchExample = new InviteExample();
 
