@@ -1,5 +1,6 @@
 package org.techuni.TechUniInviteSystem.db.repository;
 
+import jakarta.annotation.PreDestroy;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAmount;
@@ -7,12 +8,14 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscord;
+import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordExample;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordJoinedUser;
 import org.techuni.TechUniInviteSystem.db.entity.base.InviteDiscordState;
 import org.techuni.TechUniInviteSystem.db.mapper.InviteWithDiscordStateMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordJoinedUserMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordMapper;
 import org.techuni.TechUniInviteSystem.db.mapper.base.InviteDiscordStateMapper;
+import org.techuni.TechUniInviteSystem.domain.invite.models.additional.DiscordInviteAdditionalData;
 
 @Repository
 @AllArgsConstructor
@@ -39,6 +42,11 @@ public class DiscordInviteRepository {
                 Optional.ofNullable(stateExpireTime).map(LocalDateTime.now(ZONE)::minus).orElse(null));
     }
 
+    @PreDestroy
+    public void deleteAllStateWhenShutdown() {
+        inviteDiscordStateMapper.deleteByExample(null);
+    }
+
     public void addJoinedUser(final int inviteId, final long userId) {
         final var joinedUser = new InviteDiscordJoinedUser();
 
@@ -57,6 +65,19 @@ public class DiscordInviteRepository {
         data.setNickname(nickname);
 
         inviteDiscordMapper.insert(data);
+    }
+
+    public DiscordInviteAdditionalData getAdditionalData(int dbId) {
+        final var example = new InviteDiscordExample();
+        example.or() //
+                .andInviteIdEqualTo(dbId);
+
+        final var discordInvite = inviteDiscordMapper.selectByExample(example) //
+                .stream() //
+                .findFirst() //
+                .orElseThrow(() -> new IllegalStateException("Additional data not found."));
+
+        return new DiscordInviteAdditionalData(String.valueOf(discordInvite.getGuildId()), discordInvite.getNickname());
     }
 
 }
