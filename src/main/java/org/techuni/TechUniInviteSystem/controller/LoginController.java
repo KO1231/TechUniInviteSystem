@@ -41,8 +41,8 @@ public class LoginController {
         }
 
         try {
-            final var authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUser(), loginRequest.getPassword()));
+            final var authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUser(), loginRequest.getPassword()));
 
             final var token = tokenProvider.generateToken(authentication);
             return ResponseEntity.ok().body(new LoginSuccessResponse(token));

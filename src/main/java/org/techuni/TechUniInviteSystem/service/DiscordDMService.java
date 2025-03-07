@@ -80,8 +80,8 @@ public class DiscordDMService {
                         if (attachment.forceLoad) { // isForceLoadAttachment
                             throw new RuntimeException("Failed to load attachment: %s".formatted(attachment.name), e);
                         } else {
-                            final var message = "Failed to load attachment. But the DM will sent(because it is not forced attachment). : %s".formatted(
-                                    attachment.name);
+                            final var message = "Failed to load attachment. But the DM will sent(because it is not forced attachment). : %s"
+                                    .formatted(attachment.name);
                             log.warn(message, e);
                             return null;
                         }
