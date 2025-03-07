@@ -44,7 +44,7 @@ public class DiscordInviteRepository {
 
     @PreDestroy
     public void deleteAllStateWhenShutdown() {
-        inviteWithDiscordStateMapper.cleanAllState();
+        inviteDiscordStateMapper.deleteByExample(null);
     }
 
     public void addJoinedUser(final int inviteId, final long userId) {
