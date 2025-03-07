@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -24,8 +25,9 @@ public class JwtTokenProvider {
     private long jwtExpirationInMs;
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.secret}") String jwtSecret) {
-        this.algorithm = Algorithm.HMAC512(jwtSecret);
+    public JwtTokenProvider(@Value("${jwt.secret:#{null}}") Optional<String> jwtSecret) {
+        this.algorithm = Algorithm.HMAC512(jwtSecret.orElse( //
+                RandomStringUtils.secureStrong().nextAlphanumeric(128)));
     }
 
     // JWTトークンを生成
