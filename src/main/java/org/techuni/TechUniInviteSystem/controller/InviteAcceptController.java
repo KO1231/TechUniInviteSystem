@@ -36,12 +36,8 @@ public class InviteAcceptController {
             throw ErrorCode.INVITATION_CODE_VALIDATION_ERROR.exception();
         }
 
-        final var _inviteDto = inviteService.getInviteByCode(inviteCode);
-        if (_inviteDto.isEmpty()) {
-            throw ErrorCode.INVITATION_NOT_FOUND.exception(inviteCode);
-        }
-        final var inviteDto = _inviteDto.get();
-
+        final var inviteDto = inviteService.getInviteByCode(inviteCode) //
+                .orElseThrow(() -> ErrorCode.INVITATION_NOT_FOUND.exception(inviteCode));
         return inviteService.acceptInvite(inviteDto);
     }
 

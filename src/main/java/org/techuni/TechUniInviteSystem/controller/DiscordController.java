@@ -36,12 +36,8 @@ public class DiscordController {
             throw ErrorCode.DISCORD_AUTHENTICATED_VALIDATION_ERROR.exception();
         }
 
-        final var _inviteDto = inviteService.getInviteByState(state);
-        if (_inviteDto.isEmpty()) {
-            throw ErrorCode.INVITATION_NOT_FOUND.exception(code);
-        }
-        final var inviteDto = _inviteDto.get();
-
+        final var inviteDto = inviteService.getInviteByState(state) //
+                .orElseThrow(() -> ErrorCode.INVITATION_NOT_FOUND.exception(code));
         return inviteService.useInvite(inviteDto, new DiscordUsingInviteAddtionalData(code)).intoView();
     }
 
