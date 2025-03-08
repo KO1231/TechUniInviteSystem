@@ -3,6 +3,7 @@ package org.techuni.TechUniInviteSystem.service;
 import discord4j.common.util.Snowflake;
 import discord4j.discordjson.json.MemberData;
 import discord4j.rest.RestClient;
+import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -57,6 +58,9 @@ public class DiscordAPIService {
                 .toStream() //
                 .reduce(PermissionSet.none(), PermissionSet::or);
 
+        if (hasPermissions.contains(Permission.ADMINISTRATOR)) {
+            return true;
+        }
         return hasPermissions.and(expected).equals(expected);
     }
 }
