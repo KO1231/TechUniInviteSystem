@@ -3,11 +3,8 @@ package org.techuni.TechUniInviteSystem.service;
 import discord4j.common.util.Snowflake;
 import discord4j.discordjson.json.MemberData;
 import discord4j.rest.RestClient;
-import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,7 +33,7 @@ public class DiscordAPIService {
         return api.joinGuild(guildId, discordInvite.getNickname());
     }
 
-    public boolean checkBotHasPermission(final long guildId, final Set<Permission> permissions) {
+    public boolean checkBotHasPermission(final long guildId, final PermissionSet expected) {
         final var guild = restClient.getGuildById(Snowflake.of(guildId));
         final var hasRoles = Optional.ofNullable(guild.getSelfMember().block()) //
                 .map(MemberData::roles) //
@@ -48,13 +45,13 @@ public class DiscordAPIService {
             return true;
         }
 
+        // logic ref. https://discord.com/developers/docs/topics/permissions
         final var hasPermissions = guild.getRoles() //
                 .filter(r -> hasRoles.contains(r.id())) //
                 .map(r -> PermissionSet.of(r.permissions())) //
                 .toStream() //
-                .flatMap(PermissionSet::stream) //
-                .collect(Collectors.toSet());
+                .reduce(PermissionSet.none(), PermissionSet::or);
 
-        return hasPermissions.containsAll(permissions);
+        return hasPermissions.and(expected).equals(expected);
     }
 }

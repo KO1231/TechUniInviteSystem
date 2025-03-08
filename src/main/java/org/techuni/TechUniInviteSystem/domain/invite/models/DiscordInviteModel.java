@@ -1,6 +1,7 @@
 package org.techuni.TechUniInviteSystem.domain.invite.models;
 
 import discord4j.rest.util.Permission;
+import discord4j.rest.util.PermissionSet;
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.UUID;
@@ -19,12 +20,13 @@ public class DiscordInviteModel extends AbstractInviteModel<DiscordInviteAdditio
 
     DiscordInviteAdditionalData additionalData;
 
-    public EnumSet<Permission> calcNeededPermissions() {
+    public PermissionSet calcNeededPermissions() {
         final var permissions = EnumSet.of(Permission.CREATE_INSTANT_INVITE);
         if (StringUtils.isNotBlank(additionalData.getNickname())) {
             permissions.add(Permission.MANAGE_NICKNAMES);
         }
-        return permissions;
+
+        return PermissionSet.of(permissions.toArray(Permission[]::new));
     }
 
     public static AbstractInviteModel<DiscordInviteAdditionalData> of(int dbId, UUID invitationCode, String searchId, boolean isDisabled, int used,
