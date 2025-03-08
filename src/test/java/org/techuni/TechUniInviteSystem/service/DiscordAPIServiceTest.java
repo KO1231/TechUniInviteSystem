@@ -47,7 +47,7 @@ public class DiscordAPIServiceTest extends AbstractUnitTest {
     @Test
     void 正_サーバーに招待させることができる() {
         // Setup
-        final var additionalData = new DiscordInviteAdditionalData("1234567890123456789", "sample user");
+        final var additionalData = new DiscordInviteAdditionalData("123456789123456789", "sample user");
         final var invite = InviteSample.builder().additionalData(additionalData).build().intoDto();
         final var inviteModel = invite.intoModel(DiscordInviteModel.class);
         final var resultMember = MemberDataSample.builder().build().intoData();
@@ -68,7 +68,7 @@ public class DiscordAPIServiceTest extends AbstractUnitTest {
     @MethodSource("checkPermissionsProvider")
     void 正_自BOTのサーバーにおける特定の権限を所有有無を確認できる(boolean expectedResult, PermissionSet checkPermissions, List<PermissionSet> hasRolesPermissions) {
         // Setup
-        final var guildId = 1234567890123456789L;
+        final var guildId = 123456789123456789L;
 
         final var hasRoles = hasRolesPermissions.stream() //
                 .map(p -> RoleSample.builder().permissions(p).build().intoData()) //
@@ -137,7 +137,7 @@ public class DiscordAPIServiceTest extends AbstractUnitTest {
     @Test
     void 異_すでにユーザーが参加しているサーバーに招待させない() {
         // Setup
-        final var additionalData = new DiscordInviteAdditionalData("1234567890123456789", "sample user");
+        final var additionalData = new DiscordInviteAdditionalData("123456789123456789", "sample user");
         final var invite = InviteSample.builder().additionalData(additionalData).build().intoDto();
         final var inviteModel = invite.intoModel(DiscordInviteModel.class);
 

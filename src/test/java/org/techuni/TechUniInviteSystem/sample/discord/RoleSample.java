@@ -19,7 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class RoleSample {
 
     @Builder.Default
-    Id id = Id.of(RandomStringUtils.insecure().nextNumeric(19));
+    Id id = Id.of("1" + RandomStringUtils.insecure().nextNumeric(17)); // random 18桁
 
     @Builder.Default
     String name = "SampleRole";

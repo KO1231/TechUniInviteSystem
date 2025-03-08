@@ -63,7 +63,7 @@ public class InviteServiceTest extends AbstractUnitTest {
     void 正_有効な招待を受諾できる() {
         /* input setup */
         final var inviteDto = InviteSample.builder().dbId(1).build().intoDto();
-        final var response = new DiscordAuthRequestResponse("1234567890123456789", "http://localhost:8080", "state");
+        final var response = new DiscordAuthRequestResponse("123456789123456789", "http://localhost:8080", "state");
 
         /* mock */
         when(discordInviteService.acceptInvite(inviteDto)).thenReturn(response);
@@ -78,7 +78,7 @@ public class InviteServiceTest extends AbstractUnitTest {
         /* input setup */
         final var resultDto = InviteSample.builder().dbId(1).build().intoDto();
         final var usingAdditionalData = new DiscordUsingInviteAddtionalData("sampleAPIAuthenticatedCode");
-        final var response = new DiscordJoinSuccessResponse(1234567890123456789L);
+        final var response = new DiscordJoinSuccessResponse(123456789123456789L);
 
         /* mock */
         doNothing().when(inviteRepository).useInvite(resultDto.getDbId());

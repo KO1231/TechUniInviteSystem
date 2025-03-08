@@ -48,7 +48,7 @@ public class DiscordInviteServiceTest extends AbstractUnitTest {
 
     @BeforeAll
     public void beforeAll() {
-        clientId = RandomStringUtils.insecure().nextNumeric(19); // DiscordBotのClientIDは19桁
+        clientId = "1" + RandomStringUtils.insecure().nextNumeric(17); // random 18桁
         authenticatedEndpoint = "http://localhost:8080/authenticated";
 
         // mock
@@ -64,7 +64,7 @@ public class DiscordInviteServiceTest extends AbstractUnitTest {
     @Test
     void 正_正しい内容で招待を作成できる() {
         /* input setup */
-        final var additionalData = new DiscordInviteAdditionalData("1234567890123456789", "sample user");
+        final var additionalData = new DiscordInviteAdditionalData("123456789123456789", "sample user");
         final var registeredInviteDto = InviteSample.builder().additionalData(additionalData).dbId(1).build().intoDto();
 
         final var guildId = Long.parseLong(additionalData.getGuildID());
@@ -82,7 +82,7 @@ public class DiscordInviteServiceTest extends AbstractUnitTest {
     @Test
     void 正_招待を受諾できる() throws NoSuchFieldException, IllegalAccessException {
         /* input setup */
-        final var additionalData = new DiscordInviteAdditionalData("1234567890123456789", "sample user");
+        final var additionalData = new DiscordInviteAdditionalData("123456789123456789", "sample user");
         final var registeredInviteDto = InviteSample.builder().additionalData(additionalData).dbId(1).build().intoDto();
 
         final var guildId = Long.parseLong(additionalData.getGuildID());
@@ -107,7 +107,7 @@ public class DiscordInviteServiceTest extends AbstractUnitTest {
         /* input setup */
         final var useInviteAdditionalData = new DiscordUsingInviteAddtionalData("sampleAPIAuthenticatedCode");
 
-        final var additionalData = new DiscordInviteAdditionalData("1234567890123456789", "sample user");
+        final var additionalData = new DiscordInviteAdditionalData("123456789123456789", "sample user");
         final var registeredInviteDto = InviteSample.builder().additionalData(additionalData).dbId(1).build().intoDto();
         final var model = registeredInviteDto.intoModel(DiscordInviteModel.class);
 
