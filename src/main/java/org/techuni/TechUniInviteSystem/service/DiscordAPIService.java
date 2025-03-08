@@ -6,8 +6,6 @@ import discord4j.rest.RestClient;
 import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,11 +34,16 @@ public class DiscordAPIService {
         return api.joinGuild(guildId, discordInvite.getNickname());
     }
 
-    public boolean checkBotHasPermission(final long guildId, final Set<Permission> permissions) {
+    public boolean checkBotHasPermission(final long guildId, final PermissionSet expected) {
         final var guild = restClient.getGuildById(Snowflake.of(guildId));
         final var hasRoles = Optional.ofNullable(guild.getSelfMember().block()) //
                 .map(MemberData::roles) //
                 .orElseThrow(() -> ErrorCode.DISCORD_GUILD_ACCESS_ERROR.exception(String.valueOf(guildId)));
+
+        // サーバーに入っているならば、expected none -> always true
+        if (expected.isEmpty()) {
+            return true;
+        }
 
         // hasRolesがemptyのとき、必ずあるはずのBOT権限も取得できていない -> ロール管理権限がない。
         // ロール管理権限がないときは、ロールによるエラーハンドリングを諦めて招待実行時エラーによるハンドリングで運用する。(最小権限のみを必要とするという非機能要件による)
@@ -48,13 +51,16 @@ public class DiscordAPIService {
             return true;
         }
 
+        // logic ref. https://discord.com/developers/docs/topics/permissions
         final var hasPermissions = guild.getRoles() //
                 .filter(r -> hasRoles.contains(r.id())) //
                 .map(r -> PermissionSet.of(r.permissions())) //
                 .toStream() //
-                .flatMap(PermissionSet::stream) //
-                .collect(Collectors.toSet());
+                .reduce(PermissionSet.none(), PermissionSet::or);
 
-        return hasPermissions.containsAll(permissions);
+        if (hasPermissions.contains(Permission.ADMINISTRATOR)) {
+            return true;
+        }
+        return hasPermissions.and(expected).equals(expected);
     }
 }
