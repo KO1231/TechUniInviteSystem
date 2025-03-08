@@ -63,7 +63,7 @@ public class InviteServiceTest extends AbstractUnitTest {
     void 正_有効な招待を受諾できる() {
         /* input setup */
         final var inviteDto = InviteSample.builder().dbId(1).build().intoDto();
-        final var response = new DiscordAuthRequestResponse("1234567890123456789", "http://localhost:8080", "state");
+        final var response = new DiscordAuthRequestResponse("123456789123456789", "http://localhost:8080", "state");
 
         /* mock */
         when(discordInviteService.acceptInvite(inviteDto)).thenReturn(response);
@@ -78,7 +78,7 @@ public class InviteServiceTest extends AbstractUnitTest {
         /* input setup */
         final var resultDto = InviteSample.builder().dbId(1).build().intoDto();
         final var usingAdditionalData = new DiscordUsingInviteAddtionalData("sampleAPIAuthenticatedCode");
-        final var response = new DiscordJoinSuccessResponse(1234567890123456789L);
+        final var response = new DiscordJoinSuccessResponse(123456789123456789L);
 
         /* mock */
         doNothing().when(inviteRepository).useInvite(resultDto.getDbId());
@@ -113,17 +113,35 @@ public class InviteServiceTest extends AbstractUnitTest {
     }
 
     private Stream<InviteDto> invalidCreateInviteAcceptProvider() {
-        final var expiredDate = ZonedDateTime.now(zoneId).minusDays(1);
+        final var expiredDate = ZonedDateTime.now(zoneId).minusSeconds(1);
 
         return Stream.of( //
-                InviteSample.builder().isDisabled(true).build().intoDto(), // disable
-                InviteSample.builder().used(0).maxUsed(0).build().intoDto(), // used
-                InviteSample.builder().expiresAt(expiredDate).build().intoDto(), // expired
-                InviteSample.builder().isDisabled(true).used(0).maxUsed(0).build().intoDto(), // disable & used
-                InviteSample.builder().used(0).maxUsed(0).expiresAt(expiredDate).build().intoDto(), // used & expired
-                InviteSample.builder().isDisabled(true).expiresAt(expiredDate).build().intoDto(), // disable & expired
-                InviteSample.builder().isDisabled(true) //
-                        .used(0).maxUsed(0).expiresAt(expiredDate).build().intoDto() // disable & used & expired
+                InviteSample.builder() //
+                        .disabled() //
+                        .build().intoDto(), // disable
+
+                InviteSample.builder() //
+                        .fullUsed(0) //
+                        .build().intoDto(), // used
+
+                InviteSample.builder() //
+                        .expiresAt(expiredDate) //
+                        .build().intoDto(), // expired
+
+                InviteSample.builder() //
+                        .disabled().fullUsed(0).build().intoDto(), // disable & used
+
+                InviteSample.builder() //
+                        .fullUsed(0).expiresAt(expiredDate) //
+                        .build().intoDto(), // used & expired
+
+                InviteSample.builder() //
+                        .disabled().expiresAt(expiredDate) //
+                        .build().intoDto(), // disable & expired
+
+                InviteSample.builder() //
+                        .disabled().fullUsed(0).expiresAt(expiredDate) //
+                        .build().intoDto() // disable & used & expired
         );
     }
 
@@ -140,14 +158,32 @@ public class InviteServiceTest extends AbstractUnitTest {
         final var expiredDate = ZonedDateTime.now(zoneId).minusDays(1);
 
         return Stream.of( //
-                InviteSample.builder().dbId(1).isDisabled(true).build().intoDto(), // disable
-                InviteSample.builder().dbId(2).used(2).maxUsed(2).build().intoDto(), // used
-                InviteSample.builder().dbId(3).expiresAt(expiredDate).build().intoDto(), // expired
-                InviteSample.builder().dbId(4).isDisabled(true).used(2).maxUsed(2).build().intoDto(), // disable & used
-                InviteSample.builder().dbId(5).used(2).maxUsed(2).expiresAt(expiredDate).build().intoDto(), // used & expired
-                InviteSample.builder().dbId(6).isDisabled(true).expiresAt(expiredDate).build().intoDto(), // disable & expired
-                InviteSample.builder().dbId(7).isDisabled(true) //
-                        .used(2).maxUsed(2).expiresAt(expiredDate).build().intoDto() // disable & used & expired
+                InviteSample.builder().registered() //
+                        .disabled() //
+                        .build().intoDto(), // disable
+
+                InviteSample.builder().registered() //
+                        .fullUsed() //
+                        .build().intoDto(), // used
+
+                InviteSample.builder().registered() //
+                        .expiresAt(expiredDate) //
+                        .build().intoDto(), // expired
+
+                InviteSample.builder().registered() //
+                        .disabled().fullUsed().build().intoDto(), // disable & used
+
+                InviteSample.builder().registered() //
+                        .fullUsed().expiresAt(expiredDate) //
+                        .build().intoDto(), // used & expired
+
+                InviteSample.builder().registered() //
+                        .disabled().expiresAt(expiredDate) //
+                        .build().intoDto(), // disable & expired
+
+                InviteSample.builder().registered() //
+                        .disabled().fullUsed().expiresAt(expiredDate) //
+                        .build().intoDto() // disable & used & expired
         );
     }
 

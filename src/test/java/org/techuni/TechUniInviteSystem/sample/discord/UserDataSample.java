@@ -11,7 +11,7 @@ import lombok.Data;
 public class UserDataSample {
 
     @Builder.Default
-    Id id = Id.of(1234567890123456789L);
+    Id id = Id.of(123456789123456789L);
 
     @Builder.Default
     Optional<String> globalName = Optional.of("TechUniSampleUser");
