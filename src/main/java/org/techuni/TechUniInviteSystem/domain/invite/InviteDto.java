@@ -93,8 +93,8 @@ public class InviteDto {
     public <M extends AbstractInviteModel<?>> M intoModel(Class<M> modelClass) {
         final var _modelClass = targetApplication.getModelClass();
         if (!modelClass.equals(_modelClass)) {
-            throw ErrorCode.UNEXPECTED_ERROR.exception(
-                    "Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
+            throw ErrorCode.UNEXPECTED_ERROR
+                    .exception("Model class is not matched. (Expected: %s, Selected: %s)".formatted(_modelClass.getName(), modelClass.getName()));
         }
 
         return modelClass.cast(intoModel());

@@ -11,5 +11,5 @@ public interface InviteWithDiscordStateMapper {
     Invite getInviteByState(@Param("state") String state);
 
     void cleanState(@Param("nowTime") LocalDateTime nowTime, @Param("stateExpireTime") LocalDateTime stateExpireTime);
-    
+
 }

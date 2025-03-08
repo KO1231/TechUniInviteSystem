@@ -8,8 +8,7 @@ import org.techuni.TechUniInviteSystem.external.discord.template.variables.JoinS
 
 @AllArgsConstructor
 public enum MessageType {
-    JOIN_SERVER_DM("join-server", JoinServerDMVariable.class),
-    ;
+    JOIN_SERVER_DM("join-server", JoinServerDMVariable.class),;
 
     @Getter
     private final String templateName;

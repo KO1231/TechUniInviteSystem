@@ -29,10 +29,8 @@ public enum ErrorMessage {
     INTERNAL_INVITATION_INVALID("Request Invalid Invitation Code. (Code: %s)"), //
 
     /* DISCORD INVITATION */
-    INTERNAL_DISCORD_ALREADY_JOINED(
-            "The Discord Invitation target already joined to the guild. (DbId: %s, InvitationCode: %s, Guild: %s, User: %s)"), //
-    DISCORD_ALREADY_JOINED(
-            "Your account have already joined to the discord server. If you think this is a mistake, please contact to the inviter."), //
+    INTERNAL_DISCORD_ALREADY_JOINED("The Discord Invitation target already joined to the guild. (DbId: %s, InvitationCode: %s, Guild: %s, User: %s)"), //
+    DISCORD_ALREADY_JOINED("Your account have already joined to the discord server. If you think this is a mistake, please contact to the inviter."), //
     INTERNAL_DISCORD_LOGIN_FAILED("Discord login failed."), //
     DISCORD_LOGIN_FAILED("Login to Your account is failed. If you think this is a mistake, please try again."), //
     INTERNAL_DISCORD_LOGIN_UNEXPECTED_ERROR("Unexpected error occurred in Discord login sequence."), //
